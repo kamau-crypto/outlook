@@ -1,0 +1,85 @@
+<html>
+
+    <head>
+        <title>Send message</title>
+        <link id="theme_css" rel="stylesheet" href="../../../outlook/v/code/general.css"/>
+        
+    </head>
+
+    <body>
+        <div>
+            <label for="languages">Choose a Language:
+
+                <select name="languages" id="languages">
+
+                    <option value="kikuyu">Kikuyu</option>
+                    <option value="maasai">Maasai</option>
+                    <option value="luo">Luo</option>
+                </select></label>
+            <!--
+              Where to type the message. -->
+            <label>
+                Enter Message <br />
+                <textarea id="msg" rows="5" cols="25"></textarea>
+            </label>
+            <!--
+              Private message. -->
+            <fieldset>
+                <legend>Is this message public?</legend>
+                <label>
+                    <input type="radio" name="visibility"/>Yes
+                </label>
+                <label>
+                    <input type="radio" name="visibility"/>No
+                </label>
+                <div id="private" hidden>
+                    <div class="media">
+                        Select Recepient
+                        <select name="recipient" id="recipient">
+                        </select>
+                    </div>
+                </div>
+
+            </fieldset>
+            <fieldset><legend>Is this message related to an event?</legend>
+
+                <label>
+                    <input 
+                        type="radio" 
+                        name="visible" 
+                        onclick="app.current.show_panel('event', true)"
+                    />
+                    Yes
+                </label>
+                <div id="event" hidden>
+                    Select event
+                    <select name="event">
+                        <option value="---">---</option>
+                        <option value="hiking">Hiking</option>
+                        <option value="Wedding">Wedding</option>
+                        <option value="funeral">Funeral</option>
+                    </select>
+                    
+                </div>
+                <label>
+                    <input 
+                        type="radio"
+                        name="visible" 
+                        onclick="app.current.show_panel('event', false)"
+                    />
+                    No
+                </label>
+            </fieldset>
+
+            <!--
+              Display new words here.-->
+            <div id="untranslated"></div>
+
+            <button id="go">Send</button>
+            <button id="cancel">Cancel</button>
+
+
+        </div>
+    </body>
+
+</html>

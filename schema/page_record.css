@@ -1,0 +1,41 @@
+/*
+Reduce the header size from the defaault*/
+header {
+    height:10%
+}
+/*
+Buttons in the header should be spaced out and stretched out a bit*/
+header input{
+    margin-right: 2%;
+}
+
+/*
+Strecht the empty data input buttons (for foreign keys) by 5%. Will this 
+truncate texts that are longer than the width of teh button?*/
+label input {
+    width:5%;
+}
+ 
+
+/*
+Show label names*/
+span.normal {
+    display:inline;
+    /*
+    Separate the field name from the data*/
+    margin-right:1%; 
+}
+
+/*
+The width of teh record is 100%
+*/
+record {
+    width:100%;
+    cursor:pointer;
+}
+
+/*
+Put spacing between fields*/
+label{
+  margin-top: 1%;
+}

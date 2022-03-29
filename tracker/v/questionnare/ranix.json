@@ -1,0 +1,29 @@
+[   {
+        "class_name": "capture\\query",
+        "args": [
+            "flow", 
+            "select registration_number, category, vehicle_flow, datetime, operator from flow",
+            "mutall_carpark"
+        ]
+    },
+    ["mutall_ranix", "organization", [], "id", "mutall_data"],
+    ["mutall_ranix", "vehicle", ["flow"], "reg_no", ["\\capture\\lookup", "flow", "registration_number"]],
+    ["mutall_ranix", "vehicle", ["flow"], "category", ["\\capture\\lookup", "flow", "category"]],
+    ["mutall_ranix", "flow", ["flow"], "direction", ["\\capture\\lookup", "flow", "vehicle_flow"]],
+    ["mutall_ranix", "flow", ["flow"], "datetime", ["\\capture\\lookup", "flow", "datetime"]],
+    ["mutall_ranix", "operator", ["flow"], "email", ["\\capture\\lookup", "flow", "operator"]],
+    
+   { "class_name": "capture\\query",
+        "args": [
+            "stock",
+            "select registration_number, category, daytime, datetime, operator from stock",
+            "mutall_carpark"
+        ]
+   },
+    ["mutall_ranix", "vehicle", ["stock"], "reg_no", ["\\capture\\lookup", "stock", "registration_number"]],
+    ["mutall_ranix", "vehicle", ["stock"], "category", ["\\capture\\lookup", "stock", "category"]],
+    ["mutall_ranix", "stock", ["stock"], "session", ["\\capture\\lookup", "stock", "daytime"]],
+    ["mutall_ranix", "stock", ["stock"], "datetime", ["\\capture\\lookup", "stock", "datetime"]],
+    ["mutall_ranix", "operator", ["stock"], "email", ["\\capture\\lookup", "stock", "operator"]]
+    
+]

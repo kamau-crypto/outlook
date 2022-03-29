@@ -1,0 +1,143 @@
+html {
+  height: 100%;
+}
+/*Grid design and styling procedure*/
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  padding: 5px;
+  display: grid;
+  gap: 2px;
+  grid-template-columns: 20% 60% 20%;
+  grid-template-rows: 10% 20% 30% 30% 10%;
+  grid-template-areas:
+    "header header header"
+    "services content welcome"
+    "services content event"
+    "services content message"
+    "footer footer footer";
+}
+/*
+Style the all the boxes. */
+*{
+    border-radius: 5px;
+}
+*::-webkit-scrollbar {
+  width: 12px;               /* width of the entire scrollbar */
+}
+.header {
+  grid-area: header;
+  display: grid;
+  grid-template-columns: 30% 70%;
+  background-color: lightgoldenrodyellow;
+}
+#company{
+    grid-row: header;
+    font-weight: bold;
+    font-size: 35px;
+    place-self: center;
+    padding-right: 50%;
+}
+#logo {
+  grid-row: header;
+  padding-left: 5%;
+}
+.heading {
+  grid-row: header;
+}
+#welcome {
+  grid-area: welcome;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+#services {
+  grid-area: services;
+  background-color: lightgoldenrodyellow;
+  overflow: scroll;
+}
+#event {
+  grid-area: event;
+  background-color: lightgoldenrodyellow;
+  overflow: scroll;
+}
+#content {
+  grid-area: content;
+  background-color:lightcyan;
+  overflow:scroll;
+}
+#message {
+  grid-area: message;
+  background-color: lightblue;
+  overflow: scroll;
+}
+
+/*
+* Test1
+*
+* Anchor link for logging in...
+*
+* ...Below shows a normal, unvisited link. */
+.a{
+    text-decoration: underline;
+    color: blue;
+    font-weight: bold;
+}
+/* 
+Convert the cursor to a pointer. */
+.a:hover{
+    cursor: pointer;
+}
+
+.footer {
+  grid-area: footer;
+  display: grid;
+  grid-template-columns: 30% 60% 10%;
+  background-color: lightblue;
+}
+#developer {
+  grid-row: footer;
+  padding-left: 10px;
+  padding-bottom: 10px;
+}
+#signature {
+  grid-row: footer;
+  place-self: center;
+  font-weight: bold;
+  padding-bottom: 50px;
+}
+#company {
+  grid-row: footer;
+  place-self: center;
+  font-size: 20px;
+  padding-bottom: 50px;
+}
+#login {
+  text-decoration: none;
+  width: 100px;
+  height: 30px;
+}
+.img_dev {
+  width: 25%;
+  max-height: 100%;
+  margin-left: 0;
+  margin-bottom: 0;
+  padding: 0;
+}
+/*
+
+Specify border for the table*/
+th,td{
+    border: 1px solid black;
+}
+/*
+By default the applications theme table is displayed in the 
+normal mode*/
+.edit{
+    display: none;
+}
+/*
+Tame select tag's properties */
+#selection{
+    width: 25%;
+}

@@ -1,0 +1,19 @@
+#exclude js files from the commits.
+*.js
+#exclude individual folders
+Insuredge/
+composer.json
+library/     
+assignments.xlsx
+composer.lock
+metavisuo/
+pictures/
+carpark/
+documentation/
+mutall_data/
+rentize/
+chama/
+kentionary/
+mutall_rental/
+vendor/
+# 
