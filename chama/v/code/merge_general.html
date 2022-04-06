@@ -1,0 +1,59 @@
+<html>
+
+<head>
+    <title>Merge</title>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&family=Poppins:wght@400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="./style.css" />
+    <script type="module">
+        //
+        import merger from "../../../outlook/v/code/merger.js";
+        //
+        // Make the merger class visible outside the module
+        window.merger = merger;
+        //
+        //Resolve the reference to the main class
+        import main from "./main.js";
+        //
+        //Make the main class visible outside the module
+        window.main = main;
+    </script>
+</head>
+
+<body>
+    <div class="header">
+        MERGING DATA
+    </div>
+    <div class="query">
+        <label>
+            Database:
+            <select id="dbase" class="dbase">
+                <option>mutall_chama</option><br>
+            </select>
+        </label>
+        <label>
+            Reference Entity Name:
+            <select id="ename" class="ename">
+                <option>member</option>
+            </select>
+        </label>
+        <!-- Specify the SQL to merge -->
+        <label>
+            Enter the SQL for selecting the records to merge:<br />
+            <textarea id="members" class="name" rows="5"
+                cols="10">select * from member where email like '%kanake%'</textarea>
+        </label>
+        <button id="run" class="button" onclick="main.merge_general()">Run</button>
+    </div>
+    <div id="resolve" class="conflicts">
+        <div id='resolution'></div>
+        <button id="go" class="proceed" hidden>Merge</button>
+        <button id="cancel" class="proceed" hidden>Merge</button>
+        <button id="merge" class="proceed">Merge</button>
+    </div>
+</body>
+
+</html>

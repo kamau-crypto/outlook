@@ -1,0 +1,119 @@
+*{
+    font-family: 'Mochiy Pop P One', sans-serif;
+    font-family: 'Merriweather', serif;
+    font-family: 'Montserrat', sans-serif;
+    font-family: 'Poppins', sans-serif;
+/*    font-weight: bold; */
+}
+html{
+   height: 100%;
+}
+/*Style the body*/
+body{
+    height:100%;
+    width: 100%;
+    color: black;
+    background-color: azure;
+    font-size: 16px;
+    overflow: hidden;
+    margin: 0 0 0 0;
+    display:grid;
+    grid-template-columns: 30% 70%;
+    grid-template-rows: 10% 90%;
+    grid-template-areas: 
+        "header header"
+        "query conflicts";
+}
+/*Style the merger header*/
+.header{
+    margin:15px 15px 15px 15px;
+    grid-area: header;
+    font-weight: bold;
+    text-align: center;
+    font-size: xx-large;
+    border-radius: 10px;
+}
+.query{
+    grid-area:query;
+    display:flex;
+    flex-direction: column;
+    margin: 50px 10px 10px 40px;
+}
+.conflicts{
+    grid-area: conflicts;
+    background-color: white;
+    overflow: auto;
+}
+/*Setting the properties for the options*/
+.dbase,.ename{
+    max-width: fit-content;
+    max-height: 35px;
+    margin: 10px 5px 5px 5px;
+    position: relative;
+    padding: 5px;
+    border: thin solid #d4d4d4;
+    background-color: whitesmoke;
+    border-radius: 10px;
+}
+/*styling the Go button*/
+.button{
+    margin: 10px 100px 10px 10px;
+    /*Centering the onclick button*/
+    position:absolute;
+    top:90%;
+    left:15%;
+    transform: translate(-80%,-15%);
+    /*Set the border of the onclick button to none*/
+    border: none;
+    height: 40px;
+    width: auto;
+    font-size: 20px;
+    border-radius: 20px;
+    /*Set the transition property for the background on hover*/
+    transition: background-color .5s;
+}
+/*Set the on hover, for the okay and proceed button*/
+.button:hover{
+    background-color:gold;
+}
+.proceed:hover{
+    background-color:gold;
+}
+.proceed{
+    margin: 10px 10px 10px 50%;
+    /*Centering the onclick button*/
+    position:absolute;
+    top:90%;
+    left:15%;
+    transform: translate(-80%,-15%);
+    /*Set the border of the onclick button to none*/
+    border: none;
+    height: 40px;
+    width: auto;
+    font-size: 20px;
+    border-radius: 20px;
+    /*Set the transition property for the background on hover*/
+    transition: background-color .5s;
+
+}
+/*The text area where the information will be displayed*/
+textarea{
+  height:100px;
+    width: 200px;
+    position: fixed;
+    align-content: center;
+    margin-left:50px;
+    border: none;
+    border-radius: 15px;  
+}
+/*The Interventions*/
+label{
+    display:block;
+
+}
+/*The proceed button*/
+/*fieldset styling*/
+fieldset{
+    margin:10px 10px 15px 50px ;
+    border-radius: 15px;
+}

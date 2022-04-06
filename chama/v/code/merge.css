@@ -1,0 +1,73 @@
+*{    font-family: 'Poppins', sans-serif;}
+html{
+    height: 100%;
+    width: 100%;
+}
+body{
+    display: grid;
+    grid-template-rows: 10% 80% 10%;
+    grid-template-columns: 100%;
+    grid-template-areas: "header" "content" "footer" ;
+    background-color: azure;
+    margin: 0;
+    overflow-y: none;
+
+}
+.header{
+    grid-area: header;
+    margin-top: 15px;
+    text-align: center;
+    background-color: azure;
+    font-size: 30px;
+}
+.content{
+    grid-area: content;
+    align-items: center;
+    background-color: whitesmoke;
+    overflow-y: scroll;
+}
+.footer{
+    grid-area: footer;
+    display: flex;
+    flex-direction: row;
+    background-color: azure;
+    padding: 25px;
+}
+button{
+    position: absolute;
+    left: 50%;
+    font-size: 24px;
+    padding: 10px;
+    transform: translate(-50%);
+    border: none;
+    border-radius: 30px;
+    height: fit-content;
+    width: auto;
+    transition: background-color 0.5s;
+}
+button:hover{
+    background-color: gold;
+}
+/**/
+table{
+    text-align: center;
+    margin-left: 50px;
+    border-collapse: collapse;
+    border:grey 2px solid;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif ;
+    letter-spacing: 1px;
+    font-size: 1.0em;
+}
+/*making the thead sticky*/
+thead{
+    background-color: gold;
+    position:sticky;
+    border-bottom: 2px solid black;
+    top:0;
+    z-index: 1;
+}
+th,td{
+    border:grey 2px solid;
+    padding: 10px 10px;
+    text-align:left;
+}

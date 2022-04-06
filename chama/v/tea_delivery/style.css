@@ -1,0 +1,16 @@
+  /*Make the font size good enough for projection*/
+  * {
+    font-size: 30px;
+    line-height: 1.4;
+}
+
+/* To display the labels in a block format rather than inline */
+label {
+    display: block;
+
+}
+
+/* Alternating table row color */
+tr:nth-child(odd) {
+    background-color: #f2f2f2;
+}

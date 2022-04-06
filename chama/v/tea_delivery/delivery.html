@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery form</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<script src="./script.js"></script>
+
+<body>
+    <form>
+        <p>
+            <center><strong>Delivery Form</strong></center>
+        </p>
+        <label>Merchant:
+            <!-- Use select to create a drop down list -->
+            <select id="merchant">
+            </select>
+        </label>
+
+        <label> Reference number:
+            <input data-dbname="mutall_users" data-ename="je" name="ref_num" type="text" />
+        </label>
+        <label> Date:
+            <input id="ref" type="date" name="ref" />
+        </label>
+
+        <!-- A data entry table styled to be 100%  -->
+        <div>
+            <table id="myTable">
+
+                <tr>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Amount</th>
+                </tr>
+
+                <!-- First row. -->
+                <tr>
+                    <td>
+                        <input list="item" name="item">
+                        <datalist id="item">
+                            <option value="Chapati">
+                            <option value="Mandazi">
+                            <option value="Samosa">
+                            <option value="Smokie">
+                        </datalist>
+                    </td>
+                    <td><input type="number" name="quantity"></td>
+                    <td><input type="number" name="amount"></td>
+
+                </tr>
+                <!-- Second row. -->
+                <tr>
+
+                    <td>
+                        <input list="item" name="item">
+                        <datalist id="item">
+                            <option value="Chapati">
+                            <option value="Mandazi">
+                            <option value="Samosa">
+                            <option value="Smokie">
+                        </datalist>
+                    </td>
+                    <td><input type="number" name="quantity"></td>
+                    <td><input type="number" name="amount"></td>
+                </tr>
+                <!-- Third row. -->
+                <tr>
+
+                    <td>
+                        <input list="item" name="item">
+                        <datalist id="item">
+                            <option value="Chapati">
+                            <option value="Mandazi">
+                            <option value="Samosa">
+                            <option value="Smokie">
+                        </datalist>
+                    </td>
+                    <td><input type="number" name="quantity"></td>
+                    <td><input type="number" name="amount"></td>
+                </tr>
+
+            </table>
+            <button type="button" onclick="add_row(this)">➕</button>
+        </div>
+
+        <button id="go">Send</button>
+        <button id="cancel">Cancel</button>
+    </form>
+
+</body>
+
+</html>

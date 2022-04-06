@@ -1,0 +1,30 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../twilio/style.css">
+    <title>Sending sms's</title>
+</head>
+
+<body>
+    <form method="$_POST" action="../twilio/send_sms.php" class="message">
+        <h1>Send Text Message</h1>
+        <label>To: <input name="to" type="tel" placeholder="Receiver's phone number" required pattern="\d+|\W\d+">
+            </input>
+        </label>
+        <label for="msg">Message: </label>
+        <textarea id="msg" name="message" rows="7" cols="35" placeholder="Compose a message" spellcheck="true"
+            autocapitalize="sentences" autocorrect="on">
+        </textarea>
+        <input class="send" type="submit" value="send" />
+        <input id="cancel" class="send" value="send" hidden />
+        <input id="go" class="send" value="go" hidden />
+    </form>
+</body>
+
+</html>
