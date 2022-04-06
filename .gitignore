@@ -1,19 +1,22 @@
 #exclude js files from the commits.
 *.js
-#exclude individual folders
-Insuredge/
-composer.json
-library/     
-assignments.xlsx
-composer.lock
+#exclude individual folders     
 metavisuo/
 pictures/
-carpark/
 documentation/
-mutall_data/
 rentize/
-chama/
-kentionary/
-mutall_rental/
-vendor/
-# 
+accounting/
+carpark/
+#chama speciic folders
+chama/v/documents
+chama/v/auth
+#Exclude the netbeans folders
+accounting/nbproject
+chama/nbproject
+documentation/nbproject
+accounting/nbproject
+carpark/nbproject
+outlook/nbproject
+schema/nbproject/
+# My local tests folder
+test/
