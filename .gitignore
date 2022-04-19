@@ -9,7 +9,17 @@ accounting/
 carpark/
 #chama speciic folders
 chama/v/documents
-chama/v/auth
+#Exceptions in the twilio method
+chama/v/twilio/vendor
+chama/v/twilio/*.lock
+chama/v/twilio/*.json
+chama/v/twilio/*.css
+chama/v/twilio/send_sms.php
+chama/v/twilio/send_sms_1.php
+#Exceptions to the PHP Mailer
+chama/v/mailer/vendor
+chama/v/mailer/*.lock
+chama/v/mailer/*.json
 #Exclude the netbeans folders
 accounting/nbproject
 chama/nbproject
@@ -20,3 +30,5 @@ outlook/nbproject
 schema/nbproject/
 # My local tests folder
 test/
+/tracker/nbproject/private/
+tracker/v/auth
