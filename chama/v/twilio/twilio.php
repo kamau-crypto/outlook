@@ -16,15 +16,16 @@ class twilio
     // Obtain the account ssid, the account token, and the account phone number 
     // from the twilio console. You must have logged in to twilio to obtain these
     //Get the twilio ACCOUNT_SID
-    const sid = "ACa0da98876ae7c59dea6fd839c0543643";
+    const sid = "sasds45";
     //
     //Get the account AUTH_TOKEN
-    const token = "d3fc09c9b83539ac70859fd94f97df88";
+    const token = "455466sasa";
     //
     //Get the account PHONE_NUMBER
     const phone = "+18593764537";
     //
-    function __construct(){
+    function __construct()
+    {
     }
     //
     public function send_message(string $to, string $body): bool
@@ -64,8 +65,8 @@ class twilio
     //
     //inspect the returned message if the delivery was successful and return false
     //if otherwise.
-    function status($message):bool{
-    
+    function status($message): bool
+    {
     }
 }
 
