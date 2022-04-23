@@ -13,10 +13,10 @@ use Twilio\Rest\Client;
 // Obtain the account ssod, the account token, and the account phone number from the 
 // twilio console. You must have logged in to twilio to obtain these
 //Get the twilio ACCOUNT_SID
-$sid = "";
+$sid = "ACa0da98876ae7c59dea6fd839c0543643";
 //
 //Get the account AUTH_TOKEN
-$token = "";
+$token = "92bfeac1aba57e60e99cd3c315ebce67";
 //
 //Get the account PHONE_NUMBER
 $phone = "+18593764537";
@@ -25,7 +25,7 @@ $phone = "+18593764537";
 $to = '+254715555770';
 //
 //Obtain the body of the message
-$body = 'This is a test message from twilio';
+$body = 'This is a message using twilio';
 //
 //Instantiate a new instance of the Client class to enable senfing the messaged
 $twilio = new Client($sid, $token);
@@ -43,7 +43,7 @@ $message = $twilio->messages
             "from" => $phone,
             //
             //Here a webhook is needed to get the response from the email once it is sent
-            /*"statusCallback"=>*/
+            "statusCallback" => "http://206.189.207.206/test/call__back.php"
         ]
     );
 $msg = implode($phone, $_SESSION);
