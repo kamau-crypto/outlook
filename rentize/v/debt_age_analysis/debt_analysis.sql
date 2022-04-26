@@ -87,7 +87,8 @@ with
             inner join current_bal on `current_bal`.`client`=`bal_3`.`client`
     )
 --
---Select all debts namely the balances older than 
+--Select all debts that all older than 1 year, between 12 months and 6 months,
+-- between 6 months and 3 months, and debts less than 3 months old.
     select
     aclient.client,
     aclient.name,
@@ -103,5 +104,3 @@ from aclient
     join D3 on D3.client=`aclient`.`client`
     join current_bal on current_bal.client=`aclient`.`client`
 order by client ASC;
---
---
