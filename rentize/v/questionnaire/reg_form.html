@@ -1,0 +1,257 @@
+<html>
+
+<head>
+    <meta utf="8">
+    <title>Events</title>
+    <link rel="stylesheet" href="general.css">
+    <script type="text/javascript" src="general.js"></script>
+</head>
+
+<body onclick="get_val()">
+    <h3>Registration Form</h3>
+    <fieldset id="Providers">
+        <legend>Select how you will like to login</legend>
+        <label>
+            <input id="r1" name="providers_option" value="Google" data-ename="user" type="radio">
+            <span><a href="https://www.google.com/">Google</a></span>
+        </label>
+        <label>
+            <input id="r2" name="providers_option" value="Facebook" type="radio">
+            <span><a href="https://www.facebook.com/">Facebook</a></span>
+        </label>
+        <label>
+            <input id="r3" name="providers_option" value="Outlook" type="radio" onclick="show(true, 'credentials')">
+            <span>Outlook</span>
+        </label>
+        <fieldset id="credentials" hidden>
+            <legend>Credentials</legend>
+            <label>
+                <span>Email</span>
+                <input name="credential_email" data-ename="user" type="text">
+            </label>
+            <label>
+                <span>Password</span>
+                <input name="credential_password" type="password">
+            </label>
+            <label>
+                <span>Full Name</span>
+                <input type="text" name="credential_name">
+            </label>
+            <label>
+                <span>Phone Number</span>
+                <input name="credential_phone_no" type="text">
+            </label>
+        </fieldset>
+
+    </fieldset>
+    <fieldset id="internship">
+        <legend>Enter your Internship details</legend>
+        <label>
+            <span>Start Date:</span>
+            <input type="date" name="internship_start_date">
+        </label>
+        <fieldset>
+            <legend>select your duration</legend>
+            <label>
+                <input name="options" type="radio" value="Open Ended" />
+                <Span>Open Ended</span>
+            </label>
+            <label>
+                <input name="options" type="radio" value="Fixed Term" onclick="show(true, 'end_date')" />
+                <span>Fixed Term</span>
+            </label>
+            <div id="end_date" hidden>
+                <label>
+                    <span>End Date:</span>
+                    <input name='internship_end_date' type="date" value="2022/04/06">
+                </label>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>Do you have the following requirements?</legend>
+            <label>
+                <input name="computer" type="checkbox" value="Laptop (Corei7 processor)">
+                <span>Laptop(preferably with a core i7 processor)</span>
+            </label>
+
+            <label>
+                <input name="smart_phone" type="checkbox" value="Smartphone">
+                <span>Smart phone</span>
+            </label>
+
+            <label>
+                <input type="checkbox" onclick="show(true, 'other_equipments')">
+                <span>Other</span>
+                <input id="other_equipments" name="other_equipments" type="text">
+            </label>
+            <label>Are you available from 8am to 5pm on weekdays</label>
+            <label>
+                <span><input type="radio" onclick="show(true, 'Available')">Yes</span>
+            </label>
+            <div id="available" hidden>when are you available from <input type="text"> To <input type="text"> </div>
+        </fieldset>
+        <fieldset>
+            <legend>Do you have a sponsor?</legend>
+            <label>
+                <input type="radio" name="Sponsor" onclick="show(true, 'sponsored')">
+                <span>Yes</span>
+            </label>
+            <fieldset id="sponsored" hidden>
+                <label>
+                    <span>Full Name</span>
+                    <input type="text" name="sponsor_name">
+                </label>
+                <label>
+                    <span>Phone Number</span>
+                    <input name="sponsor_phone_number" type="text">
+                </label>
+                <label>
+                    <span>Email</span>
+                    <input name="sponsor_email" data-ename="user" type="text">
+                </label>
+            </fieldset>
+            <label>
+                <input type="radio" name="Sponsor" onclick="show(true, 'self-sponsored')">
+                <span>How will you support yourself?</span>
+            </label>
+            <textarea id="self-sponsored" hidden></textarea>
+        </fieldset>
+    </fieldset>
+    <fieldset>
+        <legend>Do you have any qualifications?</legend>
+        <table>
+            <h2>Level Of Education</h2>
+            <th>
+            <td rowspan="2">Certificate Obtained</td>
+            <td rowspan="2">Institute attended</td>
+            <td colspan="2">when</td>
+            </th>
+            <tr>
+                <td></td>
+                <td>start</td>
+                <td>end</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td><input name="certificate_obtained" type="text"></td>
+                <td><input name="institute_attended" type="text"></td>
+                <td><input name="education_start_date" type="date"></td>
+                <td><input name="education_end_date" type="date"></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td><input name="certificate_obtained" type="text"></td>
+                <td><input name="institute_attended" type="text"></td>
+                <td><input name="education_start_date" type="date"></td>
+                <td><input name="education_end_date" type="date"></td>
+            </tr>
+        </table>
+        <button type="button" onclick="add_table_row(this)">more</button>
+        <h2>Have Any Programming Experience</h2>
+        <label>
+            <span>If yes</span>
+            <input name="Programming_Option_Yes" type="radio" onclick="show(true, 'programming_languages')">
+        </label>
+        <div id="programming_languages" hidden>
+            <label>
+                <input name="Php" type="checkbox">
+                <span>Php</span>
+            </label>
+            <label>
+                <input name="javascript" type="checkbox">
+                <span>Javascript</span>
+            </label>
+            <label>
+                <input name="html" type="checkbox">
+                <span>Html</span>
+            </label>
+            <label>
+                <input name="sql" type="checkbox">
+                <span>Sql</span>
+            </label>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>Have any history attachments?</legend>
+        <table style="width:100%">
+            <thead>
+                <tr>
+                    <th>Company</th>
+                    <th>Desigination</th>
+                    <th>Period</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input name="Company_name" type="text"></td>
+                    <td><input name="desigination" type="text"></td>
+                    <td><input name="history_start_dste" type="date"></td>
+                    <td><input name="history_end_date" type="date"></td>
+                </tr>
+                <tr>
+                    <td><input name="Company_name" type="text"></td>
+                    <td><input name="desigination" type="text"></td>
+                    <td><input name="history_start_dste" type="date"></td>
+                    <td><input name="history_end_date" type="date"></td>
+                </tr>
+            </tbody>
+
+
+        </table>
+        <button type="button" onclick="add_table_row(this)">➕</button>
+    </fieldset>
+    <fieldset>
+        <legend>Who referred you to us?</legend>
+        <label>
+            <span>Full Name</span>
+            <input name="referral_name" type="text">
+        </label>
+
+        <label>
+            <span>Email</span>
+            <input name="referral_email" type="text">
+        </label>
+
+        <label>
+            <span>Phone Number</span>
+            <input name="referral_phone_number" type="text">
+        </label>
+    </fieldset>
+
+    <fieldset>
+        <legend>Are you a resident of Kiserian?</legend>
+        <label>
+            <span>Yes</span>
+            <input type="radio" name="Kiserian_resident" />
+        </label>
+        <label>
+            <span>No</span>
+            <input type="radio" name="Kiserian_resident" onclick="show(true, 'resident_town')" />
+        </label>
+        <div id="resident_town" hidden>
+            <label>
+                <span>whats your residence?</span>
+                <input id="resident_town" type="text" name="Kiserian_resident" />
+            </label>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Who is your next of Kin?</legend>
+        <label>
+            <span>Full Name</span>
+            <input name="next_of_kin_name" type="text" />
+        </label>
+        <label>
+            <span>Email</span>
+            <input name='next_of_kin_email' type="text" />
+        </label>
+        <label>
+            <span>Phone Number</span>
+            <input name="next_of_kin_phone_number" type="text">
+        </label>
+    </fieldset>
+    <button type="submit">Submit</button>
+</body>
+
+</html>
