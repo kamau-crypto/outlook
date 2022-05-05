@@ -1,5 +1,13 @@
-Account: 2930413 
-Name: PETER KARIUKI MURAYA 
-Amount Due: -17.07 Ksh Overpayment 
-Latest Bill: 3783 Ksh 
-Due Date: 2022-03-07
+Details
+Name:	PETER KARIUKI MURAYA
+Account number:	29304136
+Meter number:	57100147479
+Balance:	3,472.93
+Last Bill
+Unpaid Bill Amount:	3,472.93
+Due Date:	06/05/2022
+Bill Date:	22/04/2022
+Bill Number:	202204BC0006514071
+Last Readings
+Meter number:	57100147479
+Readings:	Energy Active - 2612

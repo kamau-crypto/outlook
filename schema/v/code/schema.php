@@ -681,13 +681,15 @@ class database extends schema {
     // 
     //Use this database to test if a user with the given credentials is 
     //found in the user database or not.
-    public function authenticate(string $email, string $password):bool{
+    public function authenticate(
+                string $email, 
+                string $password):bool{
         // 
         //Create an sql/view to retrieve the password from  user table. 
         //the user with the given email 
         $sql = "select password "
                 . "from user "
-                . "where email= '$email' ";
+                . "where email= '$email'";
         //
         //Execute the query and retrieve the password
         $users= $this->get_sql_data($sql);
@@ -715,7 +717,7 @@ class database extends schema {
         //the user with the given email 
         $sql = "select password "
                 . "from user "
-                . "where email= '$email' ";
+                . "where email= '$email'";
         //
         //Execute the query and retrieve the password
         $users= $this->get_sql_data($sql);

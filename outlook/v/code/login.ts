@@ -191,11 +191,13 @@ class outlook extends provider {
     //
     public email: string;
     public password: string;
+    //public organization:string;
 
-    constructor(email: string, password: string, operation:operation_id) {
+    constructor(email: string, password: string,operation:operation_id) {
         super('outlook',operation);
         this.email = email;
         this.password = password;
+        //this.organization = organization;
     }
     //
     //This is our custom made signing method using php hashing. 
@@ -212,7 +214,7 @@ class outlook extends provider {
               "database",
               ["mutall_users"], 
               "register",
-              [this.email, this.password]);
+                [this.email, this.password]);
         } else {
             //
             //LOGIN
@@ -221,7 +223,7 @@ class outlook extends provider {
               "database",
               ["mutall_users"], 
               "authenticate",
-              [this.email, this.password]);
+                [this.email, this.password]);
             //
             //If the login is not successful throw an exception
             if (!ok) throw new schema.mutall_error("Invalid login credentials");

@@ -1,10 +1,10 @@
 --
 -- The query to generate all the debtors with debts older than an year old.
 with
-    --
-    --Get all the current with valid agreements
+    /*
+    Get all the current with valid agreements*/
     aclient as (
-        select 
+        select distinct
            client.client,
             client.name
         from 
@@ -60,8 +60,8 @@ with
         from bal
         where mon= MONTH(DATE_SUB(CURDATE(),INTERVAL 1 YEAR))and
               yr=YEAR(DATE_SUB(CURDATE(),INTERVAL 1 YEAR))
-    ),
-    --
+    )
+    /*
     --Calculate the balance from 12 months ago to 6 months ago
     D1 as(
         select
@@ -91,20 +91,18 @@ with
     --
     --Select all debts that all older than 1 year, between 12 months and 6 months,
     -- between 6 months and 3 months, and debts less than 3 months old.
-    select
-        aclient.client,
-        aclient.name,
-        bal_12.amount as `debt_older_than_1yr`,
-        D1.amount as `12_months<debt>6_months`,
-        D2.amount as `6_months<debt>3_months`,
-        D3.amount as `3_months<debt>now`,
-        current_bal.amount as `current_balance`
-    from aclient
-        inner join bal_12 on bal_12.client=`aclient`.`client`
-        inner join D1 on D1.client=`aclient`.`client`
-        inner join D2 on D2.client=`aclient`.`client`
-        inner join D3 on D3.client=`aclient`.`client`
-        inner join current_bal on current_bal.client=`aclient`.`client`
-    order by client ASC;
-/**/
-    select * from aclient;
+    --     select
+    --         aclient.client,
+    --         aclient.name,
+    --         bal_12.amount as `debt_older_than_1yr`,
+    --         D1.amount as `12_months<debt>6_months`,
+    --         D2.amount as `6_months<debt>3_months`,
+    --         D3.amount as `3_months<debt>now`,
+    --         current_bal.amount as `current_balance`
+    --     from aclient
+    --         inner join bal_12 on bal_12.client=`aclient`.`client`
+    --         inner join D1 on D1.client=`aclient`.`client`
+    --         inner join D2 on D2.client=`aclient`.`client`
+    --         inner join D3 on D3.client=`aclient`.`client`
+    --         inner join current_bal on current_bal.client=`aclient`.`client`
+    --     order by client ASC;

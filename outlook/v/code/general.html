@@ -15,16 +15,27 @@
     the Mutall project  -- depending on the aim/audience of the 
     report.-->
     <div id="content"></div>
-    
+
     <!-- 
     Do the reporting here. Style this element so that errors are shown
     in red; otherwise the report is green -->
-    <div id="report"></div>
-    
-   <div class="buttons">
+    <div id="report">
+        <fieldset id="org">
+            <label for="organization">
+                Select organization:
+            </label>
+            <select name="organization" id="organization"></select>
+            <label for="new_organization">
+                Add a new organization
+            </label>
+            <input id="new_organization" type="text" name="organization">
+        </fieldset>
+    </div>
+
+    <div class="buttons">
         <!--This button exits this page successfully -->
         <button id="go">Ok</button>
-        
+
         <!--This button cancels the requested operation -->
         <button id="cancel">Cancel</button>
     </div>

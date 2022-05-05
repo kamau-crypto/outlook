@@ -1,0 +1,51 @@
+/* website to have a common font size of 25px and line height of 1.5 */
+* {
+    font-size: 30px;    
+}
+/* sets a maximum width of the webppage to 900px and a auto margin that aligns the page at the center */
+body {
+    max-width: 900px;
+    margin: auto;
+    padding: 2%;
+}
+/* creates a border at the bottom of the header */
+h3 {
+    width: 50%;
+    border-bottom: 3px solid black;
+}
+/* displays all label tags as block */
+label {
+    display: block;
+    margin: .5% 0;
+}
+
+table {
+    width: 100%;
+}
+
+/* makes the border in the table visible */
+table, td, th{
+    border:1px solid black;
+    border-collapse: collapse;
+    width: auto;
+}
+/* sets the input tag in the table take the whole width of the individual cells */
+td input {
+    width: 100%;
+}
+/* sets the text color of the input and reduces the font size  */
+input {
+    color:tomato;
+    font-size: 18px;
+}
+/* adds margin around the select tag */
+select {
+    margin: 1%;
+}
+/* sets width to fill the web body with a heigth of 150px; adds a marign around the textarea tag; */
+textarea {
+    width: 100%;
+    height: 150px;
+    color: tomato;
+    margin: 1%;
+}

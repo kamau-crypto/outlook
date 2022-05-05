@@ -36,8 +36,8 @@ export class view {
     //These are getter and setter to access the protected win variable. See 
     //documention for propertu win__ above to appreciate the reason for using 
     //of getters and setters in derived classes   
-    get win() { return this.win__; }
-    set win(win: Window) { this.win__ = win; }
+    get win() {return this.win__;}
+    set win(win: Window) {this.win__ = win;}
     //
     //The document of a view is that of its the window
     get document() {
@@ -52,7 +52,7 @@ export class view {
     //The ordinary programmer is not expected to interact with this property, 
     //so it is protected
     protected child_nodes: Array<ChildNode> = [];
-    
+
     //
     constructor(
         //
@@ -66,9 +66,9 @@ export class view {
         //The view's key is the count of the number of keys in the lookup.
         this.key = view.lookup.size;
         view.lookup.set(this.key, this);
-   }
+    }
 
-   
+
     //Returns the values of the currently selected inputs 
     //from a list of named ones 
     public get_input_choices(name: string): Array<string> {
@@ -77,21 +77,47 @@ export class view {
         const radios = Array.from(this.document.querySelectorAll(`input[name="${name}"]:checked`));
         //
         //Map teh selected inputs to thiier values and return the collection
-        return radios.map(r => (<HTMLInputElement>r).value);
+        return radios.map(r => (<HTMLInputElement> r).value);
     }
-    
+    //
+    // Add a new row to the table that is next to the given button
+    public add_table_row(ref_button: HTMLElement):HTMLTableRowElement {
+        //
+        //Get the table to which you will add the new row; It must be placed next to
+        //the button
+        const table = <HTMLTableElement> ref_button.previousElementSibling;
+        //
+        //Retrieve the count of the cells in the first row of the table's body.
+        const cells = Array.from(table.rows[1].cells);
+        //
+        //Insert a new row at the last record of the table
+        const row: HTMLTableRowElement = table.insertRow();
+        //
+        //Create as many cells as there are in the first row
+        let cell: HTMLTableCellElement;
+        //a
+        cells.forEach(cell =>{
+            //
+            //Create a new cell in the new row
+            const newCell:HTMLTableCellElement = row.insertCell();
+            //
+            //Transferring the attributes of the first row to the new cell
+            newCell.innerHTML = cell.innerHTML;
+        });
+        return row;
+    }
     //Returns the value from an input element
-    public get_input_value(id:string):string{
+    public get_input_value(id: string): string {
         //
         //get teh identified element
         const elem = this.get_element(id);
         //
         //It must be an input  element
-        if (!(elem instanceof HTMLInputElement)) 
+        if (!(elem instanceof HTMLInputElement))
             throw new schema.mutall_error(`'{$id}' is not an input element`);
         //
         return elem.value;
-    } 
+    }
 
     //Create a new element from  the given tagname and attributes 
     //we assume that the element has no children in this version.
@@ -130,7 +156,7 @@ export class view {
             if (key === "className") {
                 // 
                 //Take care of multiple class values
-                const classes = (<string>value).split(" ");
+                const classes = (<string> value).split(" ");
                 classes.forEach(c => element.classList.add(c));
             }
             else if (key === "textContent") {
@@ -168,8 +194,7 @@ export class view {
         }
         return element;
     }
-    
-
+    //
     //Show or hide the identified a window panel. This method is typeically 
     //used for showing/hiding a named grou of elements that must be shown
     //or hidden as required
@@ -181,30 +206,30 @@ export class view {
         //Hide the element if the show is not true
         elem.hidden = !show;
     }
-    
-    
+
+
 }
 
 //A page is a view with panels. It can be opend
-export class page extends view{
+export class page extends view {
     //
     //A page has named panels that the user must ensure that they 
     //are set before are shown.
     protected panels: Map<string, panel>;
-    
+
     //
-    constructor(url?: string){
-        super(url); 
+    constructor(url?: string) {
+        super(url);
         // 
         //Initialize the panels dictionary
         this.panels = new Map();
     }
-    
+
     //
     //The user must call this method on a new application object; its main 
     //purpose is to complete those operations of a constructor that require
     //to function synchronously
-    async initialize(): Promise<void>{
+    async initialize(): Promise<void> {
         //
         //Set the window for this page
         this.win = await this.open();
@@ -222,24 +247,24 @@ export class page extends view{
         //stack when this application loaded initially. For this version, the
         //null state is never expected because we did replace it in this 
         //application's initializetion
-        if (evt.state === null) 
+        if (evt.state === null)
             throw new schema.mutall_error("Null state unexpected");
         // 
         //Get the saved view's key
-        const key = <number>evt.state;
+        const key = <number> evt.state;
         // 
         //Use the key to get the view being restored. We assume that it must be 
         //a baby of the same type as this one
-        const new_view =<page> view.lookup.get(key);
+        const new_view = <page> view.lookup.get(key);
         //
         //It is an error if the key has no matching view.
-        if (new_view === undefined) 
+        if (new_view === undefined)
             throw new schema.mutall_error(`This key ${key} has no view`);
         // 
         //Restore the components of the new view
         new_view.restore_view(key);
     }
-    
+
     // 
     //The default way a quiz view shows its content is 
     //by looping through all its panels and painting 
@@ -253,9 +278,7 @@ export class page extends view{
             await panel.paint();
         }
     }
-    
-    
-    
+    //
     //Restore the children nodes of this view by re-attaching them to the 
     //document element of this page's window.  
     public restore_view(key: number): void {
@@ -264,7 +287,7 @@ export class page extends view{
         const View = view.lookup.get(key);
         //
         //It's an error if the view has not been cached
-        if (View === undefined) 
+        if (View === undefined)
             throw new schema.mutall_error(`This key ${key} has no matching view`);
         //
         //Get the root document element. 
@@ -277,20 +300,19 @@ export class page extends view{
         //Attach every child node of this view to the root document
         this.child_nodes.forEach(node => root.appendChild(node));
     }
-    
-    
+    //
     //Opening a page makes visible in the users view. All pages return the 
     //current window. Only popups create new ones.
-    async open(): Promise<Window>{
-        return window; 
+    async open(): Promise<Window> {
+        return window;
     }
-    
+    //
     //Remove a quiz page from a users view and wait for the base to rebuild. 
     //In popups we simply close the window; in babies we do a history back, 
     //and wait for the mother to be reinstated. In general, this does 
     //nothing
-    async close():Promise<void>{}
-    
+    async close(): Promise<void> {}
+
     //Save the children of the root document element of this view to the history
     //stack using the 'how' method
     public save_view(how: "pushState" | "replaceState"): void {
@@ -320,10 +342,9 @@ export class page extends view{
             ""
         );
     }
-    
-    
+    //
     //Show the given message in a report panel
-    async report(error:boolean, msg: string){
+    async report(error: boolean, msg: string) {
         //
         //Get the report node element
         const report = this.get_element('report');
@@ -335,7 +356,7 @@ export class page extends view{
         if (error) {
             report.classList.add('error');
             report.classList.remove('ok');
-        } 
+        }
         else {
             report.classList.add('ok');
             report.classList.remove('error');
@@ -343,21 +364,20 @@ export class page extends view{
         //
         //Hide the go button
         const go = this.get_element('go');
-        go.hidden = true;        
+        go.hidden = true;
         //
         //Change the value of the cancel button to finish
         const cancel = this.get_element('cancel');
-        cancel.textContent = 'Finish';             
+        cancel.textContent = 'Finish';
         //
         //Wait for the user to close the merge operation
         await new Promise(
-            (resolve)=>cancel.onclick = ()=>{
+            (resolve) => cancel.onclick = () => {
                 this.close();
                 resolve(null);
             }
         );
     }
-    
     
 }
 
@@ -421,20 +441,20 @@ export abstract class panel extends view {
 //A quiz extends a view in that it is used for obtaining data from a user. The
 //parameter tells us about the type of data to be collected. Baby and popup 
 //pages are extensions of a view.
-export abstract class quiz<o> extends page{
+export abstract class quiz<o> extends page {
     // 
     //These are the results collected by this quiz. 
     public result?: o;
-    
-    constructor(public url?: string) { 
-        super(); 
+
+    constructor(public url?: string) {
+        super();
     }
 
     //To administer a (quiz) page is to  managing all the operations from 
     //the  moment a page becomes visisble to when a result is returned and the
     //page closed. If successful a response (of the user defined type) is 
     //returned, otherwise it is undefined.
-    async administer(): Promise<o | undefined>{
+    async administer(): Promise<o | undefined> {
         //
         //Complete constrtuction of this class by running the asynchronous 
         //methods
@@ -443,9 +463,9 @@ export abstract class quiz<o> extends page{
         //Make the logical page visible and wait for the user to
         //succesfully capture some data or abort the process.
         //If aborted the result is undefined.
-        return  await this.show();
+        return await this.show();
     }
-    
+
     //
     //This is the process which makes the page visible, waits for 
     //user to respond and returns the expected response, if not aborted. NB. The 
@@ -493,18 +513,18 @@ export abstract class quiz<o> extends page{
         //Return the promised result.
         return response;
     }
-    
+
     //
     //Paint the full page. The next step for painting panels may need to
     //access elements crrated from this step. In a baby, this may involve
     //carnibalising a template; in a pop this does nothing
-    async paint():Promise<void>{};
+    async paint(): Promise<void> {};
 
     //The following abstract methods support the show process
     //
     //Check the inputs
-    abstract check():Promise<boolean>;
-    
+    abstract check(): Promise<boolean>;
+
     //Returns a result of the requested type
     abstract get_result(): Promise<o>;
 }
@@ -513,7 +533,7 @@ export abstract class quiz<o> extends page{
 //In contrast a popup does not(share the same window as the mother)
 export abstract class baby<o> extends quiz<o>{
     //
-    constructor(public mother?:page, url?: url) {
+    constructor(public mother?: page, url?: url) {
         super(url);
     }
 
@@ -535,18 +555,18 @@ export abstract class baby<o> extends quiz<o>{
         //Save this page's view, so that it can be resored when called upon
         //NB. The mother's view is already saved
         this.save_view("pushState");
-        
-    } 
-    
+
+    }
+
     //
     //The opening of returns the same window as the mother
     public async open(): Promise<Window> {return this.mother!.win}
 
     //Close a baby page by invoking the back button; in contrast a popup does 
     //it by executing the window close method.
-    async close():Promise<void> {
+    async close(): Promise<void> {
         //
-        return new Promise(resolve=>{
+        return new Promise(resolve => {
             //
             //Prepare for the on=pop state, and resole when the mother has been 
             //restored
@@ -562,7 +582,7 @@ export abstract class baby<o> extends quiz<o>{
             //Issue a history back command to evoke the on pop state
             this.win.history.back();
         })
-        
+
     }
 
 }
@@ -624,7 +644,7 @@ export abstract class popup<o> extends quiz<o>{
         // 
         //The popoup window size and location specification.
         public specs?: string
-    ) { super(url); }
+    ) {super(url);}
 
     //
     //Open a pop window returns a brand new window with specified dimensions.
@@ -645,7 +665,7 @@ export abstract class popup<o> extends quiz<o>{
         //Update this pop's win property
         return win;
     }
-    
+
     //
     //Get the specifications that can center the page as a modal popup
     //Overide this method if you want different layout
@@ -664,7 +684,7 @@ export abstract class popup<o> extends quiz<o>{
         //Compile the window specifictaions
         return `width=${w}, height=${h}, top=${top}, left=${left}`;
     }
-    
+
     //Close this popup window 
     async close(): Promise<void> {this.win.close();}
 }
@@ -721,7 +741,7 @@ export namespace assets {
     }
     // 
     //This is a collection of solutions indexed by an id. 
-    export type solutions = { [solution_id: string]: solution }
+    export type solutions = {[solution_id: string]: solution}
     // 
     //A product is a set of named solutions. The solutions are indexed to allow 
     //merging from different sources: shared inbuilts, inbuilt application 
@@ -757,7 +777,7 @@ export namespace assets {
     }
     //
     //The products are indexed by a product id of type string
-    export type lookup = { [product_id: string]: product };
+    export type lookup = {[product_id: string]: product};
     //
     //A product where the solution is not indexed. This simplifies the
     //specficication of new products from a users perspective
@@ -769,7 +789,7 @@ export namespace assets {
 
 }
 //This is a general structure for handling  key value pair situations. 
-export type key_value<i> = { key: i, value: string }
+export type key_value<i> = {key: i, value: string}
 //
 //This is a generalised popup for making selections from multiple choices  
 //The choices are provided as a list of key/value pairs and the output is 
@@ -809,13 +829,13 @@ export class choices<i> extends popup<Array<i>>  {
     }
     //
     //Check that the user has selected  at least one of the choices
-    async check():Promise<boolean> {
+    async check(): Promise<boolean> {
         //
         //Extract the marked/checked choices from the input checkboxes
-        const result = <unknown>this.get_input_choices(this.id);
+        const result = <unknown> this.get_input_choices(this.id);
         //
         //Cast this result into the desired output
-        this.output = <Array<i>>result;
+        this.output = <Array<i>> result;
         //
         //The ouput is ok if the choices are not empty.
         const ok = this.output.length > 0;
@@ -846,7 +866,7 @@ export class choices<i> extends popup<Array<i>>  {
         this.inputs.forEach(option => {
             //
             //Destructure the choice item 
-            const { key, value } = option;
+            const {key, value} = option;
             //
             // Use radio buttons for single choices and checkbox for multiple 
             // choices
@@ -861,7 +881,7 @@ export class choices<i> extends popup<Array<i>>  {
             //
             //Attach the label to the pannel 
             const label = this.document.createElement("temp");
-            (<HTMLElement>panel).appendChild(label);
+            (<HTMLElement> panel).appendChild(label);
             label.outerHTML = html;
         });
     }
@@ -892,7 +912,7 @@ export class report extends baby<void>{
     // 
     //Reporting does not require checks and has no results to return because 
     // it is not used for data entry.
-    async check():Promise<boolean>{return true;}
+    async check(): Promise<boolean> {return true;}
     async get_result(): Promise<void> {}
     // 
     //Display the report 

@@ -241,6 +241,7 @@ class database extends schema{
             // the same as the key.
             const value= entity.title === undefined ? entity.name : entity.title;
             //
+            //
             //Return the complete role structure
             return {key,value};
         });

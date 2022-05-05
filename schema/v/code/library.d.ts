@@ -382,8 +382,8 @@ export type index = {
     //Array<{signature, member}
     members:sql
 }
-    
-//
+//  
+//The merger class that supports the cleaning of i
 export class merger{
     constructor(imerge:Imerge);
     
@@ -398,4 +398,20 @@ export class merger{
     delete_minors(): Array<pointer>|'ok';
     //
     redirect_pointer(pointer:pointer):Array<index>|'ok'
-}    
+}
+//
+//The twilio class that supports messaging from one client to another
+export class twilio{
+    constructor();
+    //
+    //Fetch body of the message and send the message/*I need a properly defined
+    //structure for the send message*/
+    send_message(){
+        //
+        //Get the sender of the message
+        this.get_sender();
+        //
+        //Get the body of the message
+        this.get_body();
+    }
+} 

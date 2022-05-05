@@ -28,7 +28,7 @@ try {
     $mailer->setFrom("kamaupeter343@gmail.com", "FULL STACK DEVELOPER");
     //
     //The address of the emailer's recipient, The recipient's name is optional
-    $mailer->addAddress("kamaupeter343@yahoo.com", "PETER KUNG'U");
+    $mailer->addAddress("alchemistthee@gmail.com", "FRANCIS NYAKUNDI");
     //
     //Address to which to reply to
     $mailer->addReplyTo("kamaupeter343@gmail.com", "Reply");
@@ -39,13 +39,13 @@ try {
     //
     //Should a person want to send email attachments, he should add them here.
     //The file path to the file should also be included.
-    $mailer->addAttachment("../document/CV PETER KAMAU KUNGU.pdf");
+    //$mailer->addAttachment("../document/CV PETER KAMAU KUNGU.pdf");
     //
     //This allows the user to send an emailer as a simple HTML or plain text.
-    $mailer->isHTML(true);
+    $mailer->isHTML();
     //
     //The Subject of the emailer address
-    $mailer->Subject = "ADVERTISEMENT";
+    $mailer->Subject = "TESTING TESTING";
     //
     //The body of the message is also knownn as the message
     $mailer->Body = "<h1>MUTALL DATA INTERNSHIP PROGRAM</h1>"
@@ -58,7 +58,7 @@ try {
         . "<a href='form.com'>here</a>";
     //
     //the alternative to the html body
-    $mailer->AltBody = "This is the messaging template for Twilio for non-HTML mail clients";
+    $mailer->AltBody = "This for non-HTML mail clients";
 
     //
     //Send the email to the user

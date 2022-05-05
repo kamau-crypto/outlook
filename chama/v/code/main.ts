@@ -15,7 +15,7 @@ import * as lib from "../../../schema/v/code/library";
 import merger from "../../../outlook/v/code/merger.js";
 //
 //Resolve the interface reference to the outlook class
-import {crontab} from "./module.js";
+import * as mod from "../../../outlook/v/code/module.js";
 //
 //Main application
 export default class main extends app.app {
@@ -96,7 +96,7 @@ export default class main extends app.app {
                         id: "svg_development",
                         listener: ["event", async () => {
                             //Create a new object
-                            const consolidate = new svg(this,"svg.html");
+                            const consolidate = new svg(this, "svg.html");
                             //
                             await consolidate.administer();
                         }]
@@ -105,18 +105,42 @@ export default class main extends app.app {
             },
             {
                 id: "msg",
-                title: "Twilio Messaging",
+                title: "Messaging",
                 solutions: [
                     {
                         title: "send a message",
                         id: "create_sms",
                         listener: ["event", async () => {
                             //Create a new object
-                            const consolidate = new message(this, "sms.html");
+                            const consolidate = new sms(this, "sms.html");
                             //
                             await consolidate.administer();
                         }]
+                        
+                    },
+                    {
+                        title: "send an email",
+                        id: "create_email",
+                        listener: ["event", async () => {
+                            //Create a new object
+                            const consolidate = new email(this);
+                            //
+                            await consolidate.administer();
+                        }]
+                        
+                    },
+                    {
+                        title: "send a whatsapp message",
+                        id: "create_whatsapp",
+                        listener: ["event", async () => {
+                            //Create a new object
+                            const consolidate = new WhatsApp(this, "../whatsapp/whatsapp.html");
+                            //
+                            await consolidate.administer();
+                        }]
+                        
                     }
+                    
                 ]
             }
         ]
@@ -271,7 +295,7 @@ export default class main extends app.app {
         //
         //4. Respect the business selector to all crud sql's
     }
-    //
+
     //This method overrides the show panels to enable painting of additional
     //panels such as the messenger panel and the events panel.
     async show_panels(): Promise<void> {
@@ -486,9 +510,11 @@ class merge_contrib extends sql_viewer {
         //the entry of each member.
         const inputs = document.querySelectorAll('input[type="checkbox]:checked');
         //
+        //Convert the nodelist to an array
+        const check:Array<Element> = Array.from(inputs);
+        //
         //Move through each input button to check on whether it is clicked or not, 
-        const values: Array<number> =
-            await inputs.forEach(selected => { selected.value; });
+        const values=check.map(input=>(<HTMLInputElement> input).value);
         //
         //Pass the collected members as an array
         const players = values.join();
@@ -590,35 +616,9 @@ class merge_general extends outlook.baby<void>  {
         button.onclick = () => this.merge();
     }
 }
-class svg extends outlook.baby<void>{
-    //
-    //
-    //
-    constructor(
-        // 
-        //This popup parent page.
-        mother: outlook.page,
-        //
-        //The html file to use
-        filename: string
-        //
-        //The primary key columns,i,e the first records in the eHTMLTableCellElement
-    ) {
-        // 
-        //The general html is a simple page designed to support advertising as 
-        //the user interacts with this application.
-        super(mother,filename);
-        //
-    }
-    async check(): Promise<boolean> { return true; }
-    async get_result(): Promise<void> { }
-    //
-    //
-    async show_panels(): Promise<void> {
-
-    }
-}
-class message extends outlook.baby<void>{
+//
+//The outlook class that allows users to develop
+class sms extends outlook.baby<void>{
     //
     //
     //
@@ -643,45 +643,200 @@ class message extends outlook.baby<void>{
     //
     //
     async show_panels(): Promise<void> {
-        
+
+    }
+}
+//
+//The outlook class that allows users to develop
+class email extends outlook.baby<void>{
+    //
+    //
+    //
+    constructor(
+        // 
+        //This popup parent page.
+        mother: outlook.page
+        //
+        //The html file to use
+        //filename: string
+        //
+        //The primary key columns,i,e the first records in the eHTMLTableCellElement
+    ) {
+        // 
+        //The general html is a simple page designed to support advertising as 
+        //the user interacts with this application.
+        super(mother, "../templates/email.html");
+        //
+    }
+    async check(): Promise<boolean> { return true; }
+    async get_result(): Promise<void> { }
+    //
+    //
+    async show_panels(): Promise<void> {
+
+    }
+}
+//
+//The outlook class that allows users to develop
+class WhatsApp extends outlook.baby<void>{
+    //
+    //
+    //
+    constructor(
+        // 
+        //This popup parent page.
+        mother: outlook.page,
+        //
+        //The html file to use
+        filename: string
+        //
+        //The primary key columns,i,e the first records in the eHTMLTableCellElement
+    ) {
+        // 
+        //The general html is a simple page designed to support advertising as 
+        //the user interacts with this application.
+        super(mother, filename);
+        //
+    }
+    async check(): Promise<boolean> { return true; }
+    async get_result(): Promise<void> { }
+    //
+    //
+    async show_panels(): Promise<void> {
+
     }
 }
 //
 //Allowing a user to create a new popup to help the user create events with
 //start_dates, end_dates, and set all the requirements and it is triggered once
 //the event start_date has arrived.
-class event 
-    extends outlook.baby<true> 
-    implements crontab{
+class event
+    extends outlook.baby<true>
+    implements mod.crontab, mod. {
     //
     //Define the default objects to this class
-    constructor(public app:main){
+    constructor(public app: main) {
         //
         //Pass the application and the url required by the baby class
-        super(app,"schedule.html");
+        super(app, "schedule.html");
     }
     //
     //Implement the baby class method that verifies that the user has filled the
     //required input fields in the baby window.
-    async check():Promise<boolean>{
+    async check(): Promise<boolean> {
         //
         // 1.Collect and check the data that the user has entered
         // 
         // 2. Save the data to the database
+        await this.app.writer.save(this);
         // 
         // 3. Send a message to the user if the data was in the correct format
         // not
+        await this.app.messenger.send(this);
         // 
         // 4. Update the account book keeping system
+        await this.app.accountant.post(this);
         // 
         // 5. Schedule the task to execute if necessary
+        await this.app.scheduler.exec(this);
         // 
-        return true; 
+        return true;
     }
     //
-    //Once you have checked the data for consistency, you can now save the data
+    //Save the record to the database once the data is collected
+    //
+    //Once you have checked the data for consistency, you can collect the data
     //to the database using this method.
-    async get_result():Promise<true>{
+    async get_result(): Promise<true> {
         return true;
+    }
+}
+class svg extends outlook.baby<void>{
+    //
+    //
+    //
+    constructor(
+        // 
+        //This popup parent page.
+        mother: outlook.page,
+        //
+        //The html file to use
+        filename: string
+        //
+        //The primary key columns,i,e the first records in the eHTMLTableCellElement
+    ) {
+        // 
+        //The general html is a simple page designed to support advertising as 
+        //the user interacts with this application.
+        super(mother, filename);
+        //
+    }
+    async check(): Promise<boolean> { return true; }
+    async get_result(): Promise<void> { }
+    //
+    //
+    async show_panels(): Promise<void> {
+//        //
+//        //Get the svg element
+//        const svg: SVGElement = document.querySelector("svg")!;
+//        //
+//        //Create the svg point
+//        const toSVG = (svg: SVGSVGElement, x: SVGPoint, y: SVGPoint) => {
+//            //
+//            const p: SVGPoint = new DOMPoint();
+//            //
+//            //Get the mouse coordinates to transform to svg coordinates.
+//            const point = p.matrixTransform(svg.getScreenCTM()!.inverse());
+//            //
+//            return point;
+//        }
+//        svg.onclick = (e: MouseEvent) => {
+//            //
+//            //Get the screen coordinates
+//            const coord = toSVG(e.target!, e.clientX, e.clientY)=> {
+//                //
+//                //Obtain the points of the circles
+//                const c1x: number = coord.x;
+//                const c1y: number = coord.y;
+//                const c2x: number = 450;
+//                const c2y: number = 75;
+//                const radius: number = 75;
+//                //
+//                //Calculate the angle of inclination of the line
+//                const incX: number = (c2x - c1x);
+//                const incY: number = (c1y - c2y);
+//                const theta: number = Math.atan(incY / incX);
+//                //
+//                //The distance from the center of the circle to the point the line joins the circle
+//                const dx: number = Math.cos(theta) * radius;
+//                const dy: number = Math.sin(theta) * dx;
+//                //
+//                //Get the line that connects both of the circles
+//                const line: HTMLElement = this.get_element("#line");
+//                //
+//                //Isolate the point of intersection of the line with the circles
+//                //Circle 1,The point x1
+//                const px1 = parseFloat(line.getAttributeNS(null, 'x1')!);
+//                svg.setAttributeNS(null, 'x1', c1x + dx);
+//                //
+//                //Circle1, The point y1
+//                const py1: number = parseFloat(line.getAttributeNS(null, 'y1')!);
+//                svg.setAttributeNS(null, 'y1', c1y - dy);
+//                //
+//                //Circle2, the point x2
+//                const px2 = parseFloat(line.getAttributeNS(null, 'x2')!);
+//                svg.setAttributeNS(null, 'x2', c2x - dx);
+//                //
+//                //Circle 2, the point y2
+//                const py2 = parseFloat(line.getAttributeNS(null, 'y2')!);
+//                svg.setAttributeNS(null, 'y2', c2y + dy);
+//                //
+//                return px1, py1, px2, py2;
+//            }
+//        }
+//
+//        //
+//        //Once those points are con
+
     }
 }

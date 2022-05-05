@@ -227,6 +227,8 @@ export abstract class app extends outlook.page{
                 //
                 //...Specify the role id id.
                 + "role.id "
+                //
+                //
             //
             //2. Specify the "from" clause
             + "FROM "
@@ -258,7 +260,8 @@ export abstract class app extends outlook.page{
         //Extract the role id components from the server result
         this.user.role_ids = ids.map(e => e.id);
         //
-        //The user is a visitor if he has no previous roles 
+        //The user is a visitor if he has no previous roles
+        // 
         this.user.type = this.user.role_ids.length === 0 ? "visitor" : "regular";
         //
         //Register the User if he is a visitor. This effectively updates 

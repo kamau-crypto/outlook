@@ -11,7 +11,7 @@ class ssh2_crontab_manager
     {
         $path_length = strrpos(__FILE__, "/");
         //
-        this->path = substr(__FILE__, 0, $path_length) . '/';
+        $this->path = substr(__FILE__, 0, $path_length) . '/';
         //
         $this->handle = 'crontab.txt';
         //

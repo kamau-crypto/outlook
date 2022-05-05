@@ -4,7 +4,7 @@ import * as schema from "./schema.js";
 // 
 //We need the library dts to support the parametarization of the 
 //sever methods 
-import * as library from "./library.js";
+import * as library from "./library";
 //
 //Simplifies the windows equivalent fetch method with the following 
 //behaviour.
