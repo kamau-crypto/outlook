@@ -1,14 +1,16 @@
 #exclude js files from the commits.
 *.js
 *.env
+
 #exclude individual folders     
 metavisuo/
 pictures/
 documentation/
-rentize/
 accounting/
 carpark/
 rest_api_php/
+.vscode/
+dotenv/
 #chama speciic folders
 chama/v/documents
 #Exceptions in the twilio method
@@ -17,8 +19,7 @@ chama/v/twilio/*.lock
 chama/v/twilio/*.json
 chama/v/twilio/*.css
 chama/v/twilio/send_sms.php
-chama/v/twilio/
-chama/v/mailer/
+chama/v/mailer/.env
 #Exceptions to the PHP Mailer
 chama/v/mailer/vendor
 chama/v/mailer/*.lock
@@ -31,7 +32,10 @@ accounting/nbproject
 carpark/nbproject
 outlook/nbproject
 schema/nbproject/
+rentize/nbproject
 # My local tests folder
 test/
 /tracker/nbproject/private/
 tracker/v/auth
+chama/v/twilio/.env
+*const.php
