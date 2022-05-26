@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="general.css">
+    <title>Events firing template</title>
+</head>
+
+<body>
+    <fieldset>
+        <legend>
+            Is the event repetitive
+        </legend>
+        <label> Hourly:
+            <input type="radio" id="hrs" value="*">
+        </label>
+        <label>
+            Every:
+            <input type="number" id="hourly_freq" value="" max="24">
+            hour(s)
+        </label><br />
+        <label>Minutes:
+            <input type="radio" id="min">
+        </label>
+        <label>
+            Every
+            <input type="number" id="min_freq" value="" max="59">
+            minute(s)
+        </label><br />
+        <label>
+            Daily:
+            <input type="radio" id="day_month">
+        </label>
+        <label>
+            Every
+            <input type="number" id="day_freq" value="" max="31">
+            day(s)
+        </label><br />
+        <label>Monthly:
+            <input type="radio" id="month">
+        </label> <label>
+            Every
+            <input type="number" id="month_freq" mac="12">
+            month(s)
+        </label><br />
+        <label>Weekly
+            <input type="radio" id="day_week">
+        </label>
+        <label>
+            Every
+            <input type="number" id="week_freq" value="" max="7">
+            week(s)
+        </label>
+
+    </fieldset>
+</body>
+
+</html>

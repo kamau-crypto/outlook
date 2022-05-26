@@ -4,10 +4,17 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Delivery form</title>
-
+    <script type="module">
+        //
+        //Resolve references to the outlook view class
+        import view from "../../../outlook/v/code/outlook.js";
+        //
+        windows.view = view;
+            //
+    </script>
     <link rel="stylesheet" href="style.css">
+
 </head>
-<script src="./script.js"></script>
 
 <body>
     <form>
@@ -84,13 +91,12 @@
                 </tr>
 
             </table>
-            <button type="button" onclick="add_row(this)">➕</button>
+            <button type="button" onclick="view.add_table_row(this)">Add row</button>
         </div>
 
         <button id="go">Send</button>
         <button id="cancel">Cancel</button>
     </form>
-
 </body>
 
 </html>
