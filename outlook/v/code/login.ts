@@ -30,6 +30,11 @@ export class page extends popup<user> {
         //super(app.current.config!.login);
         super(url)
     }
+    //
+    //The show panels method that paints the desired output
+    async show_panels():Promise<void>{
+        return
+    }
     
     //Return the logged in user
     async get_result(){
@@ -80,7 +85,7 @@ export class page extends popup<user> {
                 //     
                 const password =
                     (<HTMLInputElement>this.get_element('password')).value;
-                //    
+                //  
                 Provider = new outlook(email, password,operation_id);
                 break;
             default:
@@ -191,13 +196,11 @@ class outlook extends provider {
     //
     public email: string;
     public password: string;
-    //public organization:string;
 
     constructor(email: string, password: string,operation:operation_id) {
         super('outlook',operation);
         this.email = email;
         this.password = password;
-        //this.organization = organization;
     }
     //
     //This is our custom made signing method using php hashing. 

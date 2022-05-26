@@ -100,6 +100,13 @@ export abstract class app extends outlook.page{
         
     }
     //
+    //This method allows the user to interact with the panels in a smart way
+    async show_panels():Promise<void>{
+        //
+        //Display all the panels of this application
+        this.panels.forEach(panel => panel.paint());
+    }
+    //
     //The user must call this method on a new application object; its main 
     //purpose is to complete those operations of a constructor that require
     //to function synchronously
@@ -219,7 +226,7 @@ export abstract class app extends outlook.page{
         //Formulate the sql statement to do the job needed 
         //
         //Select from the user database all the subscription for the user 
-        //whose email and the application_id are the given ones
+        //whose email and the application_id, and business are the given ones
         const sql =
             //
             //1. Specify what we want using a "select" clause 
@@ -227,7 +234,6 @@ export abstract class app extends outlook.page{
                 //
                 //...Specify the role id id.
                 + "role.id "
-                //
                 //
             //
             //2. Specify the "from" clause
@@ -248,7 +254,7 @@ export abstract class app extends outlook.page{
                 //
                 //Specify the application condition
                 + `AND application.id='${this.id}'`;
-        //
+                //
         //Get  the role ids of this user from the server
         const ids = <Array<{ id: string }>>await server.exec(
             "database",
