@@ -1,5 +1,9 @@
 //
+//Resolve references to the library
 import * as library from "../../../schema/v/code/library.js";
+//
+//Resolve references to the server
+import * as server from "../../../schema/v/code/server.js";
 //
 //Resolve the schema classes, viz.:database, columns, mutall e.t.c. 
 import * as schema from "../../../schema/v/code/schema.js";
@@ -206,12 +210,13 @@ export class view {
         //Hide the element if the show is not true
         elem.hidden = !show;
     }
-
+    
 
 }
 
-//A page is a view with panels. It can be opend
-export class page extends view {
+//A page is a view with panels. It is an abstract class because the show panels
+//method needs to be implemented by all class that derive this one.
+export abstract class page extends view {
     //
     //A page has named panels that the user must ensure that they 
     //are set before are shown.
@@ -264,12 +269,13 @@ export class page extends view {
         //Restore the components of the new view
         new_view.restore_view(key);
     }
-
+    
     // 
     //The default way a quiz view shows its content is 
     //by looping through all its panels and painting 
     //them. A quiz view without panels can override this method 
-    //to paint their contents.
+    //to paint their contents.This used to be the default implementation.
+    /*
     public async show_panels(): Promise<void> {
         //
         //The for loop is used so that the panels can throw 
@@ -278,6 +284,10 @@ export class page extends view {
             await panel.paint();
         }
     }
+    */
+    //
+    //The definition as revised to abstract.
+    abstract show_panels(): Promise<void>;
     //
     //Restore the children nodes of this view by re-attaching them to the 
     //document element of this page's window.  
@@ -378,7 +388,43 @@ export class page extends view {
             }
         );
     }
-    
+    //
+    //Fills the indentified selector element with options fetched from the given
+    //table name in the given database
+    async fill_selector(dbname: string, ename: string, selectorid: string) {
+        //
+        //1. Get the selector options from the database
+        //
+        //
+        //1.1 Get the options of the first and second column names
+        const options: library.Ifuel
+            = await server.exec("selector", [dbname, ename], "execute", []);
+        //
+        //2. Fill the selector with the options
+        //
+        //2.1. Get the selector element
+        const selector = this.get_element(selectorid);
+        //
+        //2.2. Check if the selector is valid
+        if(!(selector instanceof HTMLSelectElement))
+            throw new Error(`The element identified by ${selectorid} is not valid`);
+        //
+        //2.3 Go through the options and populate the selector with the option elements
+        for (let option of options) {
+            //
+            //2.3.1. Get the primary key from the option
+            //
+            //Formulate the name of the primary key.
+            const key= `${ename}_selector`;
+            //
+            const pk= option[key];
+            //
+            //2.3.2. Get the friendly component from the option
+            const friend= option.friend_;
+            //
+            this.create_element(selector, 'option', { value: `${pk}`, textContent: `${friend}`});
+        }
+    }
 }
 
 //A panel is a targeted setction of a view. It can be painted 
@@ -586,7 +632,7 @@ export abstract class baby<o> extends quiz<o>{
     }
 
 }
-
+//
 //A template is a popup window used for canibalising to feed another window.
 //The way you open it is smilar to  popup. Its flagship method is the copy 
 //operation from one document to another 
@@ -596,7 +642,7 @@ export class template extends view {
     constructor(public url: string) {
         super(url)
     }
-
+    //
     //Open a window, by default, reurns the current window and sets the
     //title
     public async open(): Promise<void> {
@@ -933,7 +979,13 @@ export class report extends baby<void>{
 //Represents a person/individual that is providing
 //or consuming a services we are developing. 
 export class user {
-    // 
+    //
+    //All the businesses associated with this user
+    public business_ids?:Array<string>;
+    //
+    //The only business associated with a user during this session
+    public business_id?:string;
+    //
     //The provider supplied data 
     public email: string | null;
     // 
