@@ -18,10 +18,10 @@ class twilio
     // Obtain the account ssid, the account token, and the account phone number 
     // from the twilio console. You must have logged in to twilio to obtain these
     //Get the twilio ACCOUNT_SID
-    const sid = "ACa0da98876ae7c59dea6fd839c0543643";
+    const sid = "";
     //
     //Get the account AUTH_TOKEN
-    const token = "0a585315fd98ee6b71ef9b5a414ff942";
+    const token = "";
     //
     //Get the account PHONE_NUMBER
     const phone = "+18593764537";
