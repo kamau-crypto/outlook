@@ -19,7 +19,7 @@ try {
     $mailer->Host = 'smtp.gmail.com';
     $mailer->SMTPAuth = true;
     $mailer->Username = 'kamaupeter343@gmail.com';
-    $mailer->Password = '1031997Kama';
+    $mailer->Password = 'ggswhvvwynkvjspo';
     $mailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mailer->Port = 587;
 
@@ -28,7 +28,7 @@ try {
     $mailer->setFrom("kamaupeter343@gmail.com", "FULL STACK DEVELOPER");
     //
     //The address of the emailer's recipient, The recipient's name is optional
-    $mailer->addAddress("alchemistthee@gmail.com", "FRANCIS NYAKUNDI");
+    $mailer->addAddress("kamaupeter343@yahoo.com", "PETER");
     //
     //Address to which to reply to
     $mailer->addReplyTo("kamaupeter343@gmail.com", "Reply");

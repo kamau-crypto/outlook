@@ -29,7 +29,7 @@ class mailer
         $this->server_config();
         //
         //Set up the administration addresses
-        $this->set_addresses();
+        $this->set_source_addresses();
     }
     //
     //The configuration details to the server that will open a connection to the
@@ -39,7 +39,7 @@ class mailer
         //
         //Set the SMTP DEBUGGER that allows for verbose(detailed) error messages
         // for better debugging
-        $this->mailer->SMTPDebug = SMTP::DEBUG_SERVER;
+        $this->mailer->SMTPDebug = SMTP::DEBUG_OFF;
         //
         //Instruct the mailer to only send emails using SMTP
         $this->mailer->isSMTP();
@@ -56,7 +56,7 @@ class mailer
         $this->mailer->Username = "mutalldata@gmail.com";
         //
         //Set the server password.
-        $this->mailer->Password = 'Godwins$';
+        $this->mailer->Password = 'djjqaghqbsypbeqv';
         //
         //Enable TLS encryption for the server
         $this->mailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
@@ -69,19 +69,18 @@ class mailer
     //
     //This method allows for the specification of the senders and the recievers 
     //for the email address namely the sender, the reciever, and the CC
-    public function set_addresses()/* Array<sender:string,Array<recievers:string>> */
+    private function set_source_addresses()
     {
-        //
         //Set the email sender. Two paramaters, the email and name to identify 
         //the sender of the email.i.e. ("mutalldata@gmail.com","MUTALL DATA")
-        $this->mailer->setFrom("mutalldata@gmail.com", "MUTALL DATA");
+        $this->mailer->setFrom("mutalldata@gmail.com","MUTALL DATA");
         //
         //Set the email to reply to. The email and the reply keyword are the two
         // parameters in this section
         $this->mailer->addReplyTo("mutalldata@gmail.com", "Reply");
         //
         //The CC to the sent email.
-        //$this->mailer->addCC("petermuraya@gmail.com");
+        $this->mailer->addCC("peterkariuki@gmail.com");
         //
         //The BCC to the sent email
         //$this->mailer->addBcc("");
@@ -90,8 +89,14 @@ class mailer
     //Allows a user to add attachments while composing the email.
     public function send_message(
         //
+        //The sender of the email
+//        string $sender,
+        //
         //Reciever email
         string $receiver,
+        //
+        //The subject of the email
+        string $subject,
         //
         //The message body
         string $body,
@@ -99,15 +104,13 @@ class mailer
         //user name
         string $name = "",
         //
-        //The subject of the email
-        string $subject = "",
-        //
         //The Attachments
-        string $attachment = "../images/chama.jpg",
+        string $attachment = "",
         //
         //The type of the body
         bool $is_html = false
-    ) {
+    ):string/*"ok"|Error*/ {
+        //
         //
         //Set the email address to recieve the email. the email and name as the 
         //two paramters.i.e., ("kamaupeter343@gmail.com","Peter Kamau")
@@ -126,30 +129,18 @@ class mailer
         //The alternative to the html.i.e., incase the mailviewer doesnot support html views
         $this->mailer->AltBody = "";
         //
-        //This is the path to attachment
-        $this->mailer->addAttachment($attachment);
-    }
-    //
-    //Send an email after setting the recipients, the configuration, 
-    //and composing the message
-    public function send_email()
-    {
-        //
-        //Get the configurations
-        $this->server_config();
-        //
-        //Get the mail recipients and senders
-        $this->set_addresses();
-        //
-        //Compose the email and provide the necessary attachments
-        // $this->send_message($receiver, $b);
+        //This is the path to attachment. Set it to be conditional since we are unsure
+        //of whether an attachment is provided or not
+        if (!($attachment == null)) {
+            $this->mailer->addAttachment($attachment);
+        }
         //
         //Set the exception handler to identify errors that may arise in while 
         //sending the email
         try {
             //
             //Send the email to the user(s)
-            $this->mailer->send();
+            echo $this->mailer->send();
             //
             return "ok";
         } catch (Exception $e) {
