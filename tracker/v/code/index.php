@@ -78,7 +78,12 @@ $config = new config();
     </div>
     <div id="services">Services
     </div>
-    <div id="content" overflow-y="scroll">
+    <div id="content">
+        Content
+        <table>
+            <thead></thead>
+            <tbody></tbody>
+        </table>
     </div>
     <div id="welcome">
         Please <button onclick="app.current.login()">login</button> to access
