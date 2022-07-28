@@ -1,13 +1,19 @@
+#Node modules exception
+outlook/node_modules/
 #exclude js files from the commits.
 *.js
 *.env
-
-#exclude individual folders     
+#Exclude versioning files
+outlook/v_2022_07_06
+chama/v_2022_07_21
+#exclude individual folders    
+mutal_carpack/ 
 metavisuo/
 pictures/
 documentation/
 accounting/
-carpark/
+carpark/tsc
+carpack/
 rest_api_php/
 .vscode/
 dotenv/
@@ -39,3 +45,9 @@ test/
 tracker/v/auth
 chama/v/twilio/.env
 *const.php
+/mutall_carpack/nbproject/private/
+/curriculum_vitae/nbproject/private/
+/ranix_carpark/nbproject/private/
+/ranics/nbproject/private/
+/schema/v/mailer
+/convinence_shop/nbproject/private/
