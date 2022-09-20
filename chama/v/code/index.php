@@ -9,6 +9,7 @@ $config = new config();
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- 
         The tile of your project -->
     <title><?php echo $config->title; ?>.</title>
@@ -41,7 +42,7 @@ $config = new config();
         //
         //Make the available in the html page
         window.crud = crud;
-
+        //
         //Start the application after fully loading the current 
         //window.
         window.onload = async () => {
@@ -49,7 +50,7 @@ $config = new config();
             //Use the php configuration file to create the main application
             window.Main = new main(<?php echo json_encode($config); ?>);
             //
-            //Complete the creatio of 'main' by evoking the asynchronous 
+            //Complete the creation of 'main' by evoking the asynchronous 
             //methods (which are not callable from the constructor)
             await window.Main.initialize();
         };
@@ -65,9 +66,7 @@ $config = new config();
         <!--
           Company logo -->
         <div id="logo">
-            <div>
-                <img src="../images/<?php echo $config->logo; ?>" height="50" width="50" />
-            </div>
+            <img src="../images/<?php echo $config->logo; ?>" height="50" width="50" />
         </div>
         <div id="company">
             <?php
