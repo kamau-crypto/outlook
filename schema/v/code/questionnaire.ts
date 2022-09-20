@@ -10,7 +10,7 @@ export type Iquestionnaire =
     |string;
 //
 //A layout is either labeled or tabular
-type layout = label|table;
+export type layout = label|table;
 //
 //A labeled layout is a tuple of 5 elements
 //

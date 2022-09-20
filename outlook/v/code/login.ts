@@ -30,6 +30,11 @@ export class page extends popup<user> {
         //super(app.current.config!.login);
         super(url)
     }
+    //
+    //The show panels method that paints the desired output
+    async show_panels():Promise<void>{
+        return
+    }
     
     //Return the logged in user
     async get_result(){
@@ -80,7 +85,7 @@ export class page extends popup<user> {
                 //     
                 const password =
                     (<HTMLInputElement>this.get_element('password')).value;
-                //    
+                //  
                 Provider = new outlook(email, password,operation_id);
                 break;
             default:
@@ -192,7 +197,7 @@ class outlook extends provider {
     public email: string;
     public password: string;
 
-    constructor(email: string, password: string, operation:operation_id) {
+    constructor(email: string, password: string,operation:operation_id) {
         super('outlook',operation);
         this.email = email;
         this.password = password;
@@ -212,7 +217,7 @@ class outlook extends provider {
               "database",
               ["mutall_users"], 
               "register",
-              [this.email, this.password]);
+                [this.email, this.password]);
         } else {
             //
             //LOGIN
@@ -221,7 +226,7 @@ class outlook extends provider {
               "database",
               ["mutall_users"], 
               "authenticate",
-              [this.email, this.password]);
+                [this.email, this.password]);
             //
             //If the login is not successful throw an exception
             if (!ok) throw new schema.mutall_error("Invalid login credentials");

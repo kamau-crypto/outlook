@@ -1,8 +1,10 @@
 --
+-- The query to generate all the debtors with debts older than an year old.
 with
-    --Get the active clients
+    --
+    --Get all the current with valid agreements
     aclient as (
-        select distinct
+        select 
            client.client,
             client.name
         from 
@@ -15,14 +17,14 @@ with
     --Balances as a base for other calculations
     bal as(
         select 
-            `invoice`.`client`,
-            `period`.`month` as mon,
-            `period`.`year` as yr,
+            invoice.client,
+            period.month as mon,
+            period.year as yr,
             closing_balance.amount
         from 
             closing_balance 
             inner join invoice on closing_balance.invoice= invoice.invoice
-            inner join `period` on invoice.`period`= `period`.`period`
+            inner join period on invoice.period= period.period
     ),
     --
     --Calculate the current balance now
@@ -64,9 +66,9 @@ with
     D1 as(
         select
             bal_12.client,
-            (bal_6.amount-bal_12.amount) as amount
+            (bal_6.amount- bal_12.amount) as amount
         from bal_12
-            inner join bal_6 on `bal_6`.`client`= `bal_12`.`client`
+            inner join bal_6 on bal_6.client= bal_12.client
     ),
     --
     --Calculate the balance from 6 months ago to 3 months ago
@@ -75,7 +77,7 @@ with
             bal_6.client,
             (bal_3.amount-bal_6.amount) as amount
         from bal_6
-            inner join `bal_3` on `bal_3`.`client`=`bal_6`.`client`
+            inner join bal_3 on bal_3.client=bal_6.client
     ),
     --
     -- The balance from three months ago to now
@@ -84,23 +86,25 @@ with
             bal_3.client,
             (current_bal.amount- bal_3.amount) as amount
         from bal_3
-            inner join current_bal on `current_bal`.`client`=`bal_3`.`client`
+            inner join current_bal on current_bal.client=bal_3.client
     )
---
---Select all debts that all older than 1 year, between 12 months and 6 months,
--- between 6 months and 3 months, and debts less than 3 months old.
+    --
+    --Select all debts that all older than 1 year, between 12 months and 6 months,
+    -- between 6 months and 3 months, and debts less than 3 months old.
     select
-    aclient.client,
-    aclient.name,
-    bal_12.amount as `debt_older_than_1yr`,
-    D1.amount as `12_months<debt>6_months`,
-     D2.amount as `6_months<debt>3_months`,
-     D3.amount as `3_months<debt>now`,
-     current_bal.amount as `current_balance`
-from aclient
-    join bal_12 on bal_12.client=`aclient`.`client`
-    join D1 on D1.client=`aclient`.`client`
-    join D2 on D2.client=`aclient`.`client`
-    join D3 on D3.client=`aclient`.`client`
-    join current_bal on current_bal.client=`aclient`.`client`
-order by client ASC;
+        aclient.client,
+        aclient.name,
+        bal_12.amount as `debt_older_than_1yr`,
+        D1.amount as `12_months<debt>6_months`,
+        D2.amount as `6_months<debt>3_months`,
+        D3.amount as `3_months<debt>now`,
+        current_bal.amount as `current_balance`
+    from aclient
+        inner join bal_12 on bal_12.client=`aclient`.`client`
+        inner join D1 on D1.client=`aclient`.`client`
+        inner join D2 on D2.client=`aclient`.`client`
+        inner join D3 on D3.client=`aclient`.`client`
+        inner join current_bal on current_bal.client=`aclient`.`client`
+    order by client ASC;
+/**/
+    select * from aclient;

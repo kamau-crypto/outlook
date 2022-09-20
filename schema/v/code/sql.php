@@ -4,7 +4,7 @@
 //This is where the schema structural database is defined with 
 //entities and columns 
 include_once 'schema.php';
-
+//
 //The class is used to suport the selection of one record of an entity.
 //It is a type of select sql that retrieves all the id columns of an entity. 
 //with all the foreign columns  resolved to their friendly values.
@@ -140,6 +140,7 @@ class selector extends view{
 //all the columns of an entity. In particular the primary and foreign keys 
 //values are accompanied by their friendly names to support editing 
 //functionality.
+/*Level 1 registration*/
 class editor extends selector{ 
     //
     function __construct(
@@ -161,8 +162,8 @@ class editor extends selector{
         //them valid for an editor.
         $this->update_view();
     }
-    
-    //Update the columns and joints of the underlying (parent) selector to make
+    //
+    //Update the columns and joins of the underlying (parent) selector to make
     //them valid for this editor
     function update_view():void{
         //

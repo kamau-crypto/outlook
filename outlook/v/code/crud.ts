@@ -858,8 +858,9 @@ export class page extends outlook.baby<crud_result> {
         //
         //The specifications of the pop up.
          return `width=${width},top=${top_pos},height=${height},left=${left}`;
-
     }           
+    //
+    //The show panels method
     
     //
     //This method makes the error button visible and puts the error in its 
@@ -948,6 +949,11 @@ export class page extends outlook.baby<crud_result> {
             //Get the span and use the entry message to paint its text content.
             errors.textContent = <string> entry.msg;
         });
+    }
+    //
+    //The show panels method
+    async show_panels(){
+        
     }
     
 }

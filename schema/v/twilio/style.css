@@ -1,0 +1,47 @@
+* {
+    font-family: 'Raleway', sans-serif;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    height: 60vh;
+    width: 80vh;
+    border: 1px solid gray;
+    border-radius: 5vh;
+    margin: 5em 0 0 15em;
+    background-color: azure;
+}
+
+h1 {
+    text-align: center;
+    border-bottom: 1px solid grey;
+}
+
+label {
+    font-size: 20px;
+    margin-left: 2vh;
+}
+
+/*The input button send*/
+.send {
+    height: 5vh;
+    width: 15vh;
+    margin-left: 35vh;
+}
+
+/*Recievers input area*/
+input {
+    height: 5vh;
+    width: 25vh;
+}
+
+/*The message composing area*/
+textarea {
+    resize: vertical;
+    margin: 0 5vh 5vh 5vh;
+}
+
+::placeholder {
+    font-size: 1em;
+}
