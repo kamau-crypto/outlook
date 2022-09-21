@@ -1,13 +1,20 @@
+#Ignore all images
+*.jpg
+*.png
+*.xlsx
+*.docx
+*.pdf
 #Node modules exception
-outlook/node_modules/
+outlook/v/node/
 #exclude js files from the commits.
 *.js
 *.env
 #Exclude versioning files
 outlook/v_2022_07_06
 chama/v_2022_07_21
-#exclude individual folders    
-mutal_carpack/ 
+#exclude individual folders
+svg/   
+carpark/ 
 metavisuo/
 pictures/
 documentation/
@@ -17,15 +24,11 @@ carpack/
 rest_api_php/
 .vscode/
 dotenv/
+convinience_shop/
 #chama speciic folders
 chama/v/documents
-#Exceptions in the twilio method
-chama/v/twilio/vendor
-chama/v/twilio/*.lock
-chama/v/twilio/*.json
-chama/v/twilio/*.css
-chama/v/twilio/send_sms.php
-chama/v/mailer/.env
+#Exceptions in the twilio folder
+chama/v/twilio/
 #Exceptions to the PHP Mailer
 chama/v/mailer/vendor
 chama/v/mailer/*.lock
@@ -50,4 +53,4 @@ chama/v/twilio/.env
 /ranix_carpark/nbproject/private/
 /ranics/nbproject/private/
 /schema/v/mailer
-/convinence_shop/nbproject/private/
+/schema/v/twilio/twilio.php
