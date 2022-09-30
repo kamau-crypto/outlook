@@ -1,5 +1,5 @@
 <?php
-$handle = curl_init('http://206.189.207.206/test/call__back.php');
+$handle = curl_init('');
 
 $data = [];
 

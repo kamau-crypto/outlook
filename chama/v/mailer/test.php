@@ -18,23 +18,23 @@ try {
     $mailer->isSMTP();
     $mailer->Host = 'smtp.gmail.com';
     $mailer->SMTPAuth = true;
-    $mailer->Username = 'kamaupeter343@gmail.com';
-    $mailer->Password = '1031997Kama';
+    $mailer->Username = '';
+    $mailer->Password = '';
     $mailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mailer->Port = 587;
 
     //
     //The sender of the emailer
-    $mailer->setFrom("kamaupeter343@gmail.com", "FULL STACK DEVELOPER");
+    $mailer->setFrom("", "FULL STACK DEVELOPER");
     //
     //The address of the emailer's recipient, The recipient's name is optional
-    $mailer->addAddress("alchemistthee@gmail.com", "FRANCIS NYAKUNDI");
+    $mailer->addAddress("", "PETER");
     //
     //Address to which to reply to
-    $mailer->addReplyTo("kamaupeter343@gmail.com", "Reply");
+    $mailer->addReplyTo("", "Reply");
     //
     //CC and BCC to the emailer
-    $mailer->addCC("kamaupeter343@outlook.com");
+    $mailer->addCC("");
     //$mailer->addBCC("");
     //
     //Should a person want to send email attachments, he should add them here.

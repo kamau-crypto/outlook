@@ -5,7 +5,8 @@ require_once '../../../schema/v/code/schema.php';
 //
 //The scheduler is responsible for creating jobs that are repetitive and those
 //that are not repetitive.
-class scheduler {
+class scheduler
+{
     //
     //Server address
     const server = "206.189.207.206";
@@ -20,7 +21,18 @@ class scheduler {
     //
     //This is the file that generates the crontab commands that contain valid
     //crontab files
-    const crontab_data_file="mutall_data_crontab.txt";
+    const crontab_data_file = "mutall_data_crontab.txt";
+    //
+    //The crontab command with the file for refreshing a crontab file
+    const crontab_command = "/home/mutall/project/refresh_cronfile.sh";
+    //The messenger file responsible for sending emails and text messages to all
+    //users.
+    const messenger = "messenger.sh";
+    //
+    //The shell file for 
+    //
+    //The database object that allows for retrieving queried data
+    private $database;
     //
     //The connection resource to the server.i.e.,the foundation running other
     //ssh2 commands once the connection to the server is established
@@ -38,179 +50,208 @@ class scheduler {
     //The message of a job
     public $message;
     //
-    //The start date of an event
+    //The start date of a crontab event
     public $start_date;
     //
-    //The frequency of the event
-    public $freq;
+    //The end date of an event, and on this date, the event should be removed
+    //from the database
+    public $end_date;
+    //
+    //The start date associated with at jobs
+    public $date;
+    //
+    //The errors associated with the event
+    public $errors = [];
+    //
+    //The errors that are flagged during the execution of at jobs
+    public $at_error;
+    //
+    //Errors flagged during the update of cron jobs
+    public $update_error;
+    //
     //constructor
-    function __construct() {
+    function __construct()
+    {
+        //
+        //Establish a connection to the database
+        //$this->database = new database("mutall_users");
         //
         //Establish a connection to the server
-        $this->connection=$this->initialize(); 
+        $this->connection = $this->initialize();
     }
     //
     //This function establishes a connection to the server enabling the scheduling
     //of jobs to our server
-    private function initialize(){
+    private function initialize()
+    {
         //
         //Create the connection to the server to allow us to run a command laterTRY CATCH
-        try{
-           $this->connect = ssh2_connect(self::server, self::port);
-           //
-           //Authenticate the user who is logging using the username and password
-           try{ 
+        try {
+            $this->connect = ssh2_connect(self::server, self::port);
+            //
+            //Authenticate the user who is logging using the username and password
+            try {
                 $this->authenticate = ssh2_auth_password(
-                    $this->connect, 
-                    self::user, 
+                    $this->connect,
+                    self::user,
                     self::pwd
                 );
-           } catch (Exception $ex) {
-               //
-               //Throw an error if no connection to the database is obtained
-               throw new Exception($ex."Could not authenticate user.Invalid password"
+            } catch (Exception $ex) {
+                //
+                //Throw an error if no connection to the database is obtained
+                throw new Exception($ex . "Could not authenticate user.Invalid password"
                     . "or username");
-           }
-        }
-        catch(Exception $e){
+            }
+        } catch (Exception $e) {
             //
             //Throw an e
-            throw new Exception($e."Could not connect to the server. Invalid domain"
-                ."or port number");
+            throw new Exception($e . "Could not connect to the server. Invalid domain"
+                . "or port number");
         }
-    } 
-    //
-    //Creating at jobs that only need the filename and the time of execution as
-    public function at(string $file, string $time){
-        return ssh2_exec($this->connection,"at -f ".$file." ".$time);
     }
     //
-    //Create cron jobs using the file as the only parameter to the execution of
-    //the cronjob.
-    public function crontab():bool {
+    //Scheduling the requested job
+    public function exec(array $ats, bool $update)
+    {
         //
-        return ssh2_exec($this->connection, "crontab ".self::crontab_data_file);
+        //1. Issue the at commands
+        //Loop through all the at commands and execute each one of them
+        foreach ($ats as $at) {
+            //
+            //
+            $at_error = $this->run_at_command($at);
+        }
+        //
+        //2. Refresh the crontab if necessary
+        if ($update === true) $update_error = $this->update_cronfile();
+        //
+        //Compile the result and return it
+        return $this->compile_error($update_error, $at_error);
     }
     //
-    //Executing the crontab
-    public function exec(object $crontab){
-        
+    //Run the at commands on a given date with a specific message
+    public function run_at_command(stdClass $at): string
+    {
+        //
+        //Using the type of at type provided from the user input...
+        switch ($at->type) {
+                //
+                //send the message
+            case "message":
+                //
+                //Get the date of the event
+                $date = $at->date;
+                //
+                //The job number
+                $msg = $at->message;
+                //
+                //We also need the recipient/business to send a message
+                $type = $at->recipient->type;
+                //
+                //The extra component 
+                $extra = $type === "group" ? $at->recipient->business->id : $at->recipient->user;
+                //
+                //The command parameters. They are:- msg(job_number),type(of
+                //recipient), and extra(further details depending on the type
+                //of recipient).
+                $parameters = "$msg $type $extra";
+                //
+                //Construct the command to be executed at the requested date
+                //(How shall we report errors when the schedule messenger fails)
+                //Investigate the at command
+                $command = 'echo "./schedule_messenger.php "'
+                    . $parameters
+                    . ' | at '
+                    . $date;
+                //
+                //Schedule the at job to be executed with the job number
+                $result = ssh2_exec($this->connection, $command);
+                //
+                break;
+            case "refresh":
+                //
+                //Compile the command to run at the start_Date
+                $start_job = 'echo "./schedule_crontab.php" | at ' . $at->start_date;
+                //
+                //Start the job's execution
+                $exec_start = ssh2_exec($this->connection, $start_job);
+                //
+                //Compile the command to run at the end date
+                $remove_job = 'echo "./schedule_crontab.php | at ' . $at->end_date;
+                //
+                //End the job's execution
+                $end_refresh = ssh2_exec($this->connection, $remove_job);
+                //
+                //Return the result
+                $result = $exec_start && $end_refresh;
+                //
+                break;
+        }
+        return $result;
+    }
+    //
+    //Compile the errors that arise when updating the cron file, and while scheduling the at job
+    public function compile_error($update_error, $at_error): array
+    {
+        //
+        //Add the errors that occur when updating the crontab
+        array_push($this->errors, $update_error);
+        //
+        //Add errors that arise when scheduling at jobs
+        array_push($this->errors, $at_error);
+        //
+        //Return the array errors
+        return $this->errors;
     }
     //
     //Refreshing the cronfile with the newly created crontab. This method runs a
-    //query that extracts all jobs that are active. i.e jobs older than today and
-    //lesser than the given job. start_date<job>end_date
-    public function update_cron_file(){
+    //query that extracts all jobs that are active. i.e jobs started earlier than 
+    //today and end later than today. start_date<job>end_date
+    public function update_cronfile()
+    {
         //
-        //Establish a connection to the database
-        $database= new database();
+        //1. Formulate the query that gets all the current jobs 
+        //i.e., those whose start date is older than now and their end date is
+        //younger than now(start_date <= now()< end_date)
+        $sql = 'select '
+            . 'job.job,'
+            . 'job.msg,'
+            . 'job.recursion->>"$.repetitive" as repetitive,'
+            . 'recursion->>"$.start_date" as start_date,'
+            . 'recursion->>"$.end_date" as end_date,'
+            . 'recursion->>"$.frequency" as frequency '
+            . 'from job '
+            . 'where repetitive="yes" '
+            . 'and start_date<= now()< end_date';
         //
-        //The query that gets all the current jobs that are older than the start date
-        //and younger than the end date
-        $sql="select job,message,recursion"
-                . "from job"
-                ."where ";
+        //2. Run the query and return the results
+        $jobs = $this->database->get_sql_data($sql);
         //
-        //Run the query and return the results
-        $jobs=$database->get_sql_data($sql);
+        //3. Initialize the entries
+        $entries = "";
         //
-        //Loop over each job, extracting the message and recursion of the event
+        //Compile the command to execute
+        $command = self::crontab_command;
+        //
+        //4. Loop over each job, extracting the frequency as part of the entry.
         foreach ($jobs as $job) {
             //
-            //2.1. The job primary key
-            $this->pk = $job[0];
+            //Get the frequency of the job
+            $freq = $job->frequency;
             //
-            //2.2. The message of the event
-            $this->message = $job[1];
+            //The crontab entry for sending messages
+            $entry = "$freq $command $job->job\n";
             //
-            //2.3. The recursion of the event
-            $this->recursion = $job[2];
+            //Add it to the list of entries
+            $entries .= $entry;
         }
         //
-        //From the recursion of the event extract the start_date,end_date, and the
-        //frequency
-        $this->create_cronjobs();
-        
-    }
-    //
-    //Create cronjobs by using the start_date and the requency of the message obtained from the user
-    private function create_cronjobs() {
+        //5. Create a cron file that contains all crontab entries.
+        file_put_contents(self::crontab_data_file, $entries);
         //
-        //Create a crontab job only if the event is of type repetitive
-        if ($this->recursion->repetitive === "yes") {
-            //
-            //The PK of the message
-            $this->pk;
-            //
-            //The message associated with the event
-            $this->message;
-            //
-            //Extract the start date,
-            $start_date = $this->recursion->start_date;
-            //
-            //and the frequency of the job
-            $freq = $this->recursion->frequency;
-            //
-            //From the requency, retrieve the..
-            //1.Minute
-            $min = $freq->minute;
-            //
-            //2. hour
-            $hr = $freq->hour;
-            //
-            //3. day_of month
-            $d_month = $freq->day_of_month;
-            //
-            //4. month
-            $mon = $freq->month;
-            //
-            //5.The day of the week,
-            $d_week = $freq->day_of_week;
-            //
-            //
-            try {
-                //
-                //Get there current working directory on the server
-                $pwd=ssh2_exec($this->connect, "pwd");
-                //
-                //Check if there are existing crontab entries under this directory
-                $this->existing_cronjobs();
-                //
-                //If there are existing jobs, add to the existing jobs, and if none is present
-                //create a new cron job
-                //
-                //Inside this cronjob, we need to create new crontab entry with
-                //some dummy variables
-            } catch (Exception $e) {
-                
-            }
-        }
-    }
-    //
-    //Check if there are existing crontab entries for this user, and if there none,
-    //Create the new crontab entry that will hold the crontab files
-    private function existing_cronjobs(){
+        //6. Run the cron job
+        $result = ssh2_exec($this->connection, "crontab " . self::crontab_data_file);
         //
-        //Run the command to check if there are existing crontabs and if none is
-        //present, create a new crontab entry
-        $existing_cron/*resource|false*/= ssh2_exec($this->connection,"crontab -l");
-        //
-        //
-        if($existing_cron !== false){
-            //
-            //Create a new crontab entry and add a line of code at the end to
-            //to ensure that we have a dummy entry with current working directory, 
-            //and the file to execute
-            ???
-            ssh2_exec($this->connection,"crontab -e");
-            //
-            //Add the dummy line of code
-            $crontab= "#This is a customized mutall file for creating cron jobs"
-                    . "#The entries to a cronjob are 5";
-            
-        }
-        //
-        //Create a copy of the current crontab from the database
-        
+        return $result;
     }
 }

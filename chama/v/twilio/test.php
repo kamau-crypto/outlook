@@ -35,7 +35,7 @@ $token = $_ENV['TWILIO_AUTH_TOKEN'];
 $phone = $_ENV['TWILIO_PHONE_NUMBER'];
 //
 //Obtain the phone number of the recipient
-$to = '+254715555770';
+$to = '';
 //
 //Obtain the body of the message
 $body = 'Your OTP password is ' . $rand . ' it is valid for twenty minutes';
@@ -56,7 +56,7 @@ $message = $twilio->messages
             "from" => $phone,
             //
             //Here a webhook is needed to get the response from the email once it is sent
-            //"statusCallback" => "http://206.189.207.206/test/call__back.php"
+            "statusCallback" => ""
         ]
     );
 ?>

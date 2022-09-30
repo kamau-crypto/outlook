@@ -1,0 +1,149 @@
+<html>
+
+<head>
+    <title>Event Form Planner</title>
+    <link rel="stylesheet" href="../templates/general.css">
+</head>
+
+<body>
+    <h4>Event Planning</h4>
+    <label>
+        <span>Name</span>
+        <input maxlength="50" size="50" type="text" data-dbname="mutall_users" data-ename="event" name="id"
+            value="Jacob's Wedding">
+    </label>
+    <span>Description</span>
+    <textarea maxlength="200" data-dbname="mutall_users" data-ename="event" name="name" defaultValue="">
+        As the Chairman to Jacob's wedding planning comittee, I invite
+        you to the pre-wedding of Jacob and Edith
+    </textarea>
+
+    <div>
+        <span>Start Date:</span>
+        <input data-dbname="mutall_users" data-ename="event" name="start_date" type="date" value="2022-06-05">
+        <span>End Date:</span>
+        <input data-dbname="mutall_users" data-ename="event" name="end_date" type="date" value="2022-06-05">
+    </div>
+
+    <fieldset>
+        <legend>Is this event contributory?</legend>
+        <label>
+            <input data-dbname="mutall_users" data-ename="event" name="contributory" checked type="radio" id="true"
+                onclick="Main.show_panel(true, 'mandatory')" />
+            <span>Yes</span>
+        </label>
+        <fieldset id="mandatory">
+            <legend>Is this contribution mandatory?</legend>
+            <label>
+                <input data-dbname="mutall_users" data-ename="event" name="mandatory" type="radio" id="true"
+                    onclick="Main.show_panel(true, 'mand')" />
+                <span>Yes</span>
+            </label>
+            <div id="mand">
+                <span>Amount</span>
+                <input data-dbname="mutall_users" data-ename="event" name="amount" type="number" />
+            </div>
+            <label>
+                <input data-dbname="mutall_users" data-ename="event" name="mandatory" type="radio" id="false"
+                    onclick="Main.show_panel(false, 'mand')" />
+                <span>No</span>
+            </label>
+
+        </fieldset>
+        <label>
+            <input data-dbname="mutall_users" data-ename="event" name="contributory" value="no" type="radio"
+                onclick="Main.show_panel(false, 'mandatory')" />
+            <span>No</span>
+        </label>
+    </fieldset>
+
+
+    <fieldset>
+        <legend>Should members be informed of this event</legend>
+        <label>
+            <input data-dbname="mutall_users" data-ename="event" name="sms" type="radio" checked="true" <!--if yes the
+                message should send the description to the users-->
+            <span>Yes</span>
+        </label>
+        <label>
+            <input data-dbname="mutall_users" data-ename="event" name="sms" type="radio" />
+            <span>No</span>
+        </label>
+
+    </fieldset>
+
+    <fieldset id="schedule">
+        <legend>Do you want to schedule this event?</legend>
+        <label>
+            <input data-dbname="mutall_users" data-ename="event" name="scheduler" type="radio" checked="true" <!- if yes
+                the the schdeuler process should take charge-->
+            <span>Yes</span>
+        </label>
+        <div class="scheduler_table">
+            <table style="width: 100%;">
+                <tr>
+                    <th data-dbname="mutall_users" data-ename="job" data-cname="job.no" type="number">
+                        Job.no</th>
+                    <th data-dbname="mutall_users" data-ename="job" data-cname="job.message" type="text">
+                        Job.message
+                    </th>
+                    <th data-dbname="mutall_users" data-ename="job" data-cname="Job Recusion" type="">
+                        Job.recusion
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        <input type="text">
+                    </td>
+                    <td>
+                        <button>Schedule</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input>
+                    </td>
+                    <td>
+                        <input>
+                    </td>
+                    <td>
+                        <input>
+                    </td>
+                </tr>
+            </table>
+            <button>Add Row</button>
+        </div>
+        <label>
+            <input data-dbname="mutall_users" data-ename="event" name="scheduler" type="radio" />
+            <span>No</span>
+        </label>
+    </fieldset><br>
+    <span>Add a scheduler</span>
+    <table style="width: 100%;">
+        <tr>
+            <th>Job No.</th>
+            <th>Message</th>
+            <th>Recursion</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td> Hi, I Invite you all to Jacob's and Edith's wedding on the 5th June 2022 at Suki Gardens from 2.00p.m.
+            </td>
+            <td><button id="recursion">recursion</button></td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Confirm attendance to Jacob's and Edith's wedding</td>
+            <td><button id="recursion">recursion</button></td>
+        </tr>
+    </table>
+
+    <button id="send">Send</button>
+    <button id="cancel">Cancel</button>
+    <button id="go" hidden></button>
+</body>
+
+</html>

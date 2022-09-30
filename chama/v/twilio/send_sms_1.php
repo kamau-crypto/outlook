@@ -13,13 +13,13 @@ use Twilio\Rest\Client;
 // Obtain the account ssod, the account token, and the account phone number from the 
 // twilio console. You must have logged in to twilio to obtain these
 //Get the twilio ACCOUNT_SID
-$sid = "ACa0da98876ae7c59dea6fd839c0543643";
+$sid = "";
 //
 //Get the account AUTH_TOKEN
-$token = "d3fc09c9b83539ac70859fd94f97df88";
+$token = "";
 //
 //Get the account PHONE_NUMBER
-$phone = "+18593764537";
+$phone = "";
 //
 //Obtain the phone number of the recipient
 $to = $_REQUEST['to'];
@@ -45,7 +45,7 @@ $message = $twilio->messages
             "from" => $phone
         ]
     );
-$msg= implode($phone, $_SESSION);
+$msg = implode($phone, $_SESSION);
 //
 session_abort();
 ?>
