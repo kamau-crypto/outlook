@@ -34,6 +34,16 @@ import * as quest from "../../../schema/v/code/questionnaire.js";
 //     { repetitive: 'yes', start_date: string, end_date: string, frequency: string }
 //
 //Testing non-repetitive tasks
+//
+//A message has the following structure, the primary key,subject,text,date created, and the user
+//the message originated from
+// type message = {
+// 	pk: string;
+// 	subject: string;
+// 	text: string;
+// 	date: string;
+// 	user: string;
+// };
 class test implements mod.crontab, mod.questionnaire {
 	//
 	constructor() {}
@@ -48,8 +58,7 @@ class test implements mod.crontab, mod.questionnaire {
 		//
 		const refresh: lib.at = {
 			type: "refresh",
-			start_date: "2022-09-20",
-			end_date: "2022-09-27"
+			datetime: "2022-09-20"
 		};
 		//
 		return [refresh];
@@ -107,26 +116,14 @@ export default class main extends app.app {
 					{
 						title: "Manage an event",
 						id: "event_manage",
-						listener: [
-							"crud",
-							"event",
-							["review"],
-							"+",
-							"mutall_chama"
-						]
+						listener: ["crud", "event", ["review"], "+", "mutall_chama"]
 					},
 					//
 					//Manage the members
 					{
 						title: "Membership management",
 						id: "member_manage",
-						listener: [
-							"crud",
-							"member",
-							["review"],
-							"+",
-							"mutall_chama"
-						]
+						listener: ["crud", "member", ["review"], "+", "mutall_chama"]
 					},
 					//
 					//Edit any table in this application
@@ -220,6 +217,8 @@ export default class main extends app.app {
 						id: "not_repeat_event",
 						listener: ["event", () => this.non_repetitive()]
 					},
+					//
+					// Test the messenger
 					{
 						title: "Test Messenger",
 						id: "test_msg",
@@ -235,11 +234,11 @@ export default class main extends app.app {
 		//
 		const msg: mod.message = {
 			get_recipient(): lib.recipient {
-				// return { type: "individual", user: ["1269"] };
-				return {
-					type: "group",
-					business: this.get_business()
-				};
+				return { type: "individual", user: ["1269"] };
+				// return {
+				// 	type: "group",
+				// 	business: this.get_business()
+				// };
 			},
 			//
 			get_business(): outlook.business {
@@ -273,7 +272,7 @@ export default class main extends app.app {
 		//
 		//2. Setup a crontab on the server using the crontab interface
 		const success = await this.scheduler.execute(data);
-		alert("success");
+		alert(` ${success} success`);
 	}
 	//
 	//Test a non-repetitive event
@@ -302,9 +301,7 @@ export default class main extends app.app {
 		//
 		//Get the messages
 		const msgs: Array<{ date: string; sender: string; text: string }> =
-			await server.exec("database", ["mutall_chama"], "get_sql_data", [
-				query
-			]);
+			await server.exec("database", ["mutall_chama"], "get_sql_data", [query]);
 		//
 		//Get the section to paint the messages
 		const panel: HTMLElement = this.get_element("message");
@@ -491,8 +488,10 @@ export default class main extends app.app {
 		await this.get_selected_msg();
 		//
 		//2. Call the reply message class
+		const reply = new reply_message(this);
 		//
 		//3. Administer the page.
+		reply.administer();
 	}
 	//
 	//Save the selected message to later reply to that message
@@ -502,6 +501,13 @@ export default class main extends app.app {
 		const tr: HTMLTableRowElement = this.document.querySelector(
 			"#message>table>tbody>.TR"
 		)!;
+		//
+		//When the user tries to reply to a message without a message, prompt
+		//him/her to select a message. And stop the execution of the program
+		if (tr === null)
+			throw new schema.mutall_error(
+				"NO MESSAGE was selected to reply. SELECT the message to and try again"
+			);
 		//
 		//2. Get the primary key of the selected message
 		const pk: string = tr.getAttribute("pk")!;
@@ -515,7 +521,7 @@ export default class main extends app.app {
         `;
 		//
 		//4. Using the primary key, extract the message from the database
-		const msg = await server.exec(
+		const msg: lib.Ifuel = await server.exec(
 			"database",
 			["mutall_users"],
 			"get_sql_data",
@@ -645,9 +651,7 @@ class sql_viewer extends app.terminal {
 				const { name } = header;
 				//
 				//
-				const value = String(
-					events[name] == undefined ? "" : events[name]
-				);
+				const value = String(events[name] == undefined ? "" : events[name]);
 				//
 				//Use this header to create a td
 				this.create_element(tr, "td", { textContent: value });
@@ -672,9 +676,7 @@ class sql_viewer extends app.terminal {
 		//
 		//Execute the query
 		const values: Array<{ member: number; email: string; events: string }> =
-			await server.exec("database", ["mutall_chama"], "get_sql_data", [
-				sql
-			]);
+			await server.exec("database", ["mutall_chama"], "get_sql_data", [sql]);
 		//
 		//Expected output
 		//  [{
@@ -692,8 +694,7 @@ class sql_viewer extends app.terminal {
 			const { member, email, events } = value;
 			//
 			//Convert the events string to an event array
-			const events_array: { [index: string]: number } =
-				JSON.parse(events);
+			const events_array: { [index: string]: number } = JSON.parse(events);
 			//
 			//
 			return { member, email, events: events_array };
@@ -747,9 +748,7 @@ class merge_contrib extends sql_viewer {
 		// we form the members list to complete the imerge structure.
 		//Get the checked values by identifying the text boxes associated with
 		//the entry of each member.
-		const inputs = document.querySelectorAll(
-			'input[type="checkbox]:checked'
-		);
+		const inputs = document.querySelectorAll('input[type="checkbox]:checked');
 		//
 		//Convert the nodelist to an array
 		const check: Array<Element> = Array.from(inputs);
@@ -839,11 +838,9 @@ class merge_general extends app.terminal {
 		//
 		//Get the merger data
 		//Get the database name
-		const dbname = (<HTMLInputElement>document.getElementById("dbname"))
-			.value;
+		const dbname = (<HTMLInputElement>document.getElementById("dbname")).value;
 		//Get the entity name
-		const ename = (<HTMLInputElement>document.getElementById("ename"))
-			.value;
+		const ename = (<HTMLInputElement>document.getElementById("ename")).value;
 		//
 		const members = (<HTMLInputElement>document.getElementById("members"))
 			.value;
@@ -998,9 +995,7 @@ class new_message
 		//1. Check if the database contains the language entity name
 		//
 		//1.1 Get the entities for the current database
-		const entities: Array<string> = Object.keys(
-			this.mother.dbase!.entities
-		);
+		const entities: Array<string> = Object.keys(this.mother.dbase!.entities);
 		//
 		//1.2 Check whether the language entity is present
 		const lang: boolean = entities.includes("language");
@@ -1068,9 +1063,10 @@ class new_message
 				const end: number = this.text_area!.selectionEnd;
 				//
 				//Get the highlighted word
-				this.focus_word = (
-					evt.target as HTMLTextAreaElement
-				).value.substring(start, end);
+				this.focus_word = (evt.target as HTMLTextAreaElement).value.substring(
+					start,
+					end
+				);
 			};
 		}
 		//
@@ -1084,9 +1080,7 @@ class new_message
 		//
 		//Get all inputs of type checkbox
 		const inputs = <Array<HTMLInputElement>>(
-			Array.from(
-				document.querySelectorAll('input[type="checkbox"]:checked')
-			)
+			Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
 		);
 		//
 		//Get the section that will be populated with the recipients once selected from the list
@@ -1130,14 +1124,10 @@ class new_message
 		const panel = <HTMLDivElement>this.get_element("chosen");
 		//
 		//Get all selected inputs of type checkbox
-		const values = Array.from(
-			panel.querySelectorAll('input[type="checkbox"]')
-		);
+		const values = Array.from(panel.querySelectorAll('input[type="checkbox"]'));
 		//
 		//Retrieve the user primary key as the value from the selected elements
-		const user: Array<string> = values.map(
-			pk => (<HTMLInputElement>pk).value
-		);
+		const user: Array<string> = values.map(pk => (<HTMLInputElement>pk).value);
 		//
 		//
 		return type === "group"
@@ -1305,13 +1295,7 @@ class new_message
 		//
 		//If applicable, get the event attached to that message
 		if (this.planner !== undefined)
-			yield [
-				"mutall_users",
-				"event",
-				[],
-				"name",
-				this.planner.event_name!
-			];
+			yield ["mutall_users", "event", [], "name", this.planner.event_name!];
 	}
 	//
 	//Get the list of members from the database.
@@ -1372,6 +1356,318 @@ class new_message
 		//
 		//Extract the business primary key
 		this.business_pk = +bus_pk[0].business;
+	}
+}
+//
+//This class supports the reply of sent messages to support conversations
+class reply_message
+	extends app.terminal
+	implements mod.questionnaire, mod.message
+{
+	//
+	//Why declare? To allow us to access the modules currently defined in
+	//the main class. NB: Mother is already a property that is of type Page and
+	//page does not have the modules.
+	public declare mother: main;
+	//
+	//
+	public user?: string;
+	//
+	//Language used.
+	public language?: string;
+	//
+	//The message to reply
+	public saved_message?: Array<{
+		business: string;
+		pk: string;
+		subject: string;
+		text: string;
+		date: string;
+		user: string;
+		language: string;
+		event: string;
+		child_of: string;
+	}>;
+	//
+	//The reply to the message
+	public message?: string;
+	//
+	//The business.
+	public organization?: string;
+	//
+	//The event info.
+	public contribution?: { event: event_planner; amount: string };
+	//
+	//create a new reply message class instance
+	constructor(mother: main) {
+		//
+		//1. Call the constructor of the parent class with the mother page and file name.
+		super(mother, "../templates/rep_msg.html");
+	}
+	//
+	//Get the sender of the message.
+	get_sender(): string {
+		//
+		//Get the user who is currently logged in.
+		const sender = this.mother.user;
+		//
+		//Ensure that a user is available.
+		if (sender === undefined) throw new schema.mutall_error(`No user found!`);
+		//
+		//Return the sender name.
+		return sender.name!;
+	}
+	//
+	//Get the content of the message.
+	get_body(): string {
+		throw new Error("Method not implemented.");
+	}
+	//
+	//Check that all the inputs are properly provided
+	async check(): Promise<boolean> {
+		//
+		//1. Collect and check the data that the user has entered.
+		//
+		//1.0 Collect the user.
+		this.user = this.mother.user!.name!;
+		//
+		//1.1 Collect and check the text of the message collected
+		const text = <HTMLInputElement>this.get_element("message");
+		console.log(text.value);
+		//
+		//1.2 Collect and check the text of the message collected
+		if (text.value.length === 0)
+			//
+			//Show the error to the user
+			throw new schema.mutall_error(
+				`No Message provided, check the ${
+					text.previousSibling!.textContent
+				} section`
+			);
+		//
+		//Set the message
+		this.message = text.value;
+		//
+		//1.3 Work on more to see if there is an event related that is contributory.
+		//If there is such an event, proceed to identify the event collect the contribution.???
+		this.contribution = this.get_contribution();
+		//
+		//2. Save the data to the database.
+		const save = await this.mother.writer.save(this);
+		//
+		//3. Reply the appropriate message from the user(s).
+		const send = await this.mother.messenger.send(this);
+		//
+		//4. Decide whether the accounting module is neccesary.
+		//It is necessary if a contributory event is invoked, call the accountant class
+		//to post the.
+		if (!(this.contribution === undefined)) {
+			//
+			//1. Update the book of accounts
+			//
+			//1.0 Get the event.(Required in a new message)
+			//  const evt = this.contribution.event;
+			//
+			//1.1 Get the amount contributed
+			const amount = this.contribution.amount;
+			//
+			//1.2 Construct a journal from the amount.
+			const je = new mod.accountant();
+			//
+			//2. Effect the payment.
+			//
+			//3. Post the journal.
+			//const post = await this.mother.accountant.post();
+			//
+			//If the posting was successful,
+			//return post;
+		}
+		//
+		return save && send;
+	}
+	get_contribution(): { event: event_planner; amount: string } {
+		//
+		//Get the event related to this contribution.
+		const event = this.contribution!.event;
+		//
+		//Get the amount and return the value.
+		const amount = this.get_input_value("amount");
+		//
+		//Return the amount.
+		return { event, amount };
+	}
+	//
+	//Collect the layouts to complete the saving of the message to the database
+	get_layouts(): Array<quest.label> {
+		//
+		//The database name.
+		const dbname = "mutall_users";
+		//
+		//Start with an empty array.
+		const reply: Array<quest.label> = [];
+		//
+		//0. Get the user
+		reply.push([dbname, "user", [], "name", this.user!]);
+		//
+		//1.Get the language.
+		// reply.push([dbname, "msg", [], "language", this.language!]);
+		//
+		//2.Get the message as a label
+		reply.push([dbname, "msg", [], "text", this.message!]);
+		//
+		//Get the organization/business related with this message and
+		//save to the relevant database, providing all the required
+		//information.
+		reply.push([dbname, "business", [], "id", this.organization!]);
+		//
+		//Return the layouts ;
+		return reply;
+	}
+	//
+	//Get the business of the user replying to the message
+	get_business(): outlook.business {
+		return this.mother.user!.business!;
+	}
+	//
+	//Get the body of the message collected by the user
+	get_content(): { subject: string; body: string } {
+		return { subject: this.saved_message![0].subject, body: this.message! };
+	}
+	//
+	//Collect the recipient of the message
+	get_recipient(): lib.recipient {
+		return { type: "individual", user: [this.saved_message![0].user] };
+	}
+	//
+	//Populate the message reply panel with the message text,the date it was created,
+	//the subject of the message
+	async populate_panels(): Promise<void> {
+		//
+		//Get the business of the user who sent the message
+		const business: lib.basic_value = await this.business_name();
+		//
+		//Get the user name of the user who sent the message
+		const user_name: lib.basic_value = await this.user_name();
+		//
+		//Get the panel to add the subject
+		const subject = <HTMLInputElement>this.get_element("subject");
+		//
+		//Add the subject to the subject panel
+		subject.value = this.saved_message![0].subject;
+		//
+		//Get the text message panel and populate it
+		const text = <HTMLInputElement>this.get_element("prev_message");
+		//
+		//Add the message text to the message panel
+		text.value = this.saved_message![0].text;
+		//
+		//Display today's date
+		this.fill_date("today");
+		//
+		//Provide additional information about the message
+		const info = <HTMLDivElement>this.get_element("details");
+		//
+		//Set the user information
+		this.create_element(info, "p", {
+			textContent: `Sent On - ${this.saved_message![0].date}`
+		});
+		//
+		//Get the status of the message once it is replied. This checks whether and message
+		//is replied to or not
+		const replied: string =
+			this.saved_message![0].child_of !== "1"
+				? "Awaiting Reply"
+				: `Replied on ${this.saved_message![0].date}`;
+		//
+		//Show the reply status of that message
+		this.create_element(info, "p", {
+			textContent: ` Response Status - ${replied}`
+		});
+		//
+		//Set the user who created the message
+		this.create_element(info, "p", {
+			textContent: `Created By - ${user_name}`
+		});
+		//
+		//The business of the recipient
+		this.create_element(info, "p", {
+			textContent: `Business - ${business}`
+		});
+		//
+		//If there is no event associated with the event, provide
+		const event: string =
+			this.saved_message![0].event === null
+				? "none"
+				: this.saved_message![0].event;
+		//
+		//The event assigned to the message
+		this.create_element(info, "p", {
+			textContent: `Event - ${event}`
+		});
+		//
+		//Calculate the Number of days and hours since the message was sent
+	}
+	//
+	//Get the name of the user who created the message
+	async user_name(): Promise<lib.basic_value> {
+		//
+		//Construct the query to retrieve the user's name
+		const query: string = `
+			select
+				user.name
+			from user
+			where user.user=${+this.saved_message![0].user};
+			`;
+		//
+		//Execute the query
+		const user: lib.Ifuel = await server.exec(
+			"database",
+			["mutall_users"],
+			"get_sql_data",
+			[query]
+		);
+		//
+		//Return the name of the user
+		return user![0].name;
+	}
+	//
+	//Get the business of the user who created the message
+	async business_name(): Promise<lib.basic_value> {
+		//
+		//Construct the query to return the user who created the
+		const sql: string = `
+			select
+				business.name
+			from business
+			where business.business=${+this.saved_message![0].business}
+		`;
+		//
+		//Execute the query
+		const business_name: lib.Ifuel = await server.exec(
+			"database",
+			["mutall_users"],
+			"get_sql_data",
+			[sql]
+		);
+		//
+		//Return the name of the business the user who created the message belonged to
+		return business_name[0].name;
+	}
+	//
+	//The show panels method allows the user to interact smartly with the page
+	async show_panels(): Promise<void> {
+		//
+		//Retrieve the saved message
+		const saved_msg: string = localStorage.getItem("msg")!;
+		//
+		//The saved message contains the entire message, with the subject, sender,user,
+		//business,and the date it was created.
+		//Extract the message and its properties
+		this.saved_message = JSON.parse(saved_msg);
+		//
+		//Add the message to reply, the date created, and the user who sent the message
+		//to the page
+		await this.populate_panels();
 	}
 }
 //
@@ -1892,25 +2188,13 @@ class event_planner extends app.terminal implements mod.questionnaire {
 		yield ["mutall_users", "event", [], "end_date", this.end_date!];
 		//
 		//Is the event a contributory
-		yield [
-			"mutall_users",
-			"event",
-			[],
-			"contributory",
-			this.contributory![0]
-		];
+		yield ["mutall_users", "event", [], "contributory", this.contributory![0]];
 		//
 		//Is the event a mandatory
 		yield ["mutall_users", "event", [], "mandatory", this.mandatory![0]];
 		//
 		//The mandatory contribution of an event
-		yield [
-			"mutall_users",
-			"event",
-			[],
-			"contributory",
-			this.mandatory_amount!
-		];
+		yield ["mutall_users", "event", [], "contributory", this.mandatory_amount!];
 		//
 		//The amount paid by a user, preferred
 		yield ["mutall_users", "event", [], "amount", this.pay_amount!];
@@ -2013,14 +2297,10 @@ class collect_recipient extends outlook.popup<lib.recipient> {
 		const panel = <HTMLDivElement>this.get_element("chosen");
 		//
 		//Get all selected inputs of type checkbox
-		const values = Array.from(
-			panel.querySelectorAll('input[type="checkbox"]')
-		);
+		const values = Array.from(panel.querySelectorAll('input[type="checkbox"]'));
 		//
 		//Retrieve the user primary key as the value from the selected elements
-		const user: Array<string> = values.map(
-			pk => (<HTMLInputElement>pk).value
-		);
+		const user: Array<string> = values.map(pk => (<HTMLInputElement>pk).value);
 		//
 		//
 		return type === "group"
@@ -2097,27 +2377,21 @@ class repetitive extends app.terminal implements mod.crontab {
 		//
 		//Throw an exception when no input is provided
 		if (this.msg === undefined || "")
-			throw new schema.mutall_error(
-				"No message is provided for this event"
-			);
+			throw new schema.mutall_error("No message is provided for this event");
 		//
 		//The start_date
 		this.start_date = this.get_input_value("start_date");
 		//
 		//Throw an exception if no date is provided
 		if (this.start_date === undefined || "")
-			throw new schema.mutall_error(
-				"No start date is provided for this event"
-			);
+			throw new schema.mutall_error("No start date is provided for this event");
 		//
 		//The end date
 		this.end_date = this.get_input_value("end_date");
 		//
 		//Throw an exception if no end date is provided for this event
 		if (this.end_date === undefined || "")
-			throw new schema.mutall_error(
-				"No end date is provided for this event"
-			);
+			throw new schema.mutall_error("No end date is provided for this event");
 		//
 		//and the frequency of the job
 		const freq: HTMLElement = this.get_element("frequency");
@@ -2127,9 +2401,7 @@ class repetitive extends app.terminal implements mod.crontab {
 		//
 		//Throw an exception if no frequency is provided for the job
 		if (this.frequency === undefined || "")
-			throw new schema.mutall_error(
-				"No frequency is provided for this event"
-			);
+			throw new schema.mutall_error("No frequency is provided for this event");
 		//
 		//Execute the current job on the server
 		const scheduled = await this.mother.scheduler.execute(this);
@@ -2291,7 +2563,7 @@ class get_cronjob implements mod.crontab {
 					//Compile the output to an object
 					yield {
 						type: "message",
-						date: job.recursion.send_date,
+						datetime: job.recursion.send_date,
 						message: job.job_number,
 						recipient: job.recipient
 					};
@@ -2306,10 +2578,15 @@ class get_cronjob implements mod.crontab {
 						type: "refresh",
 						//
 						//The start date of the event
-						start_date: job.recursion.start_date,
+						datetime: job.recursion.start_date
+					};
+					yield {
+						//
+						//the event type
+						type: "refresh",
 						//
 						//The end date of the cronjob
-						end_date: job.recursion.end_date
+						datetime: job.recursion.end_date
 					};
 					//
 					break;
