@@ -12,50 +12,60 @@
 <body>
     <fieldset>
         <legend>
-            Is the event repetitive
+            Is the event repetitive?
         </legend>
-        <label> Hourly:
-            <input type="radio" id="hrs" value="*">
+        <label>
+            <input type="radio" name="event_type">
+            No
         </label>
         <label>
-            Every:
-            <input type="number" id="hourly_freq" value="" max="24">
-            hour(s)
-        </label><br />
-        <label>Minutes:
-            <input type="radio" id="min">
+            Start date:
+            <input type="date" value="2022-07-03">
         </label>
         <label>
-            Every
-            <input type="number" id="min_freq" value="" max="59">
-            minute(s)
-        </label><br />
-        <label>
-            Daily:
-            <input type="radio" id="day_month">
-        </label>
-        <label>
-            Every
-            <input type="number" id="day_freq" value="" max="31">
-            day(s)
-        </label><br />
-        <label>Monthly:
-            <input type="radio" id="month">
-        </label> <label>
-            Every
-            <input type="number" id="month_freq" mac="12">
-            month(s)
-        </label><br />
-        <label>Weekly
-            <input type="radio" id="day_week">
-        </label>
-        <label>
-            Every
-            <input type="number" id="week_freq" value="" max="7">
-            week(s)
+            <input type="radio" name="event_type">
+            Yes
+            <div>
+                <label>
+                    Start date
+                    <input type="date" value="2022-07-10">
+                </label>
+                <label>
+                    Day of the week:
+                    <select>
+                        <option value="1">Monday</option>
+                        <option value="2">Tuesday</option>
+                        <option value="3">Wednesday</option>
+                        <option value="4">Thursday</option>
+                        <option value="5">Friday</option>
+                        <option value="6">Saturday</option>
+                        <option value="7">Sunday</option>
+                    </select>
+                </label>
+
+                <label>
+                    Set the time:
+                    <input type="time">
+                </label>
+                <label>
+                    Month:
+                    <input type="month">
+                    <label>
+                        Day of the Month:
+                        <input type="number" max="31">
+                    </label>
+                </label>
+
+            </div>
+
+
         </label>
 
+
     </fieldset>
+    <button id="save">save</button>
+    <button id="go" hidden>go</button>
+    <button id="cancel">cancel</button>
 </body>
 
 </html>

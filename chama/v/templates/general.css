@@ -1,6 +1,6 @@
 /* website to have a common font size of 25px and line height of 1.5 */
 * {
-    font-size: 20px;
+    font-size: 18px;
 }
 
 /* sets a maximum width of the webppage to 900px and a auto margin that aligns the page at the center */
@@ -19,7 +19,9 @@ h3 {
 /* displays all label tags as block */
 label {
     display: flex;
-    /* margin: .5% 0; */
+    flex-direction: row;
+    margin: 5px;
+
 }
 
 table {
@@ -36,8 +38,8 @@ th {
 }
 
 /* sets the input tag in the table take the whole width of the individual cells */
-td input {
-    width: 100%;
+td>input {
+    width: auto;
 }
 
 /* sets the text color of the input and reduces the font size  */
@@ -55,6 +57,19 @@ select {
 textarea {
     width: 100%;
     height: 150px;
-    color: tomato;
+    color: blue;
     margin: 1%;
+}
+
+textarea.recursion {
+    width: 90%;
+    height: 60px;
+    resize: none;
+    font-size: 18px;
+}
+
+/* the field set that contains the mandatory contributed amount */
+#set_amount,
+#scheduler {
+    border: none;
 }

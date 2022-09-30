@@ -1,0 +1,47 @@
+<html>
+
+<head>
+    <title>Reply Message</title>
+    <link rel="stylesheet" href="../templates/general.css">
+</head>
+
+<body>
+    <h3>Repetitive</h3>
+
+    <!-- Contribution section 
+         This question would be asked if the message pointed to a contribution. -->
+    <fieldset>
+        <legend>Repetitive jobs</legend>
+        <label>
+            subject:
+            <input type="text" id="subject" value="fundraising">
+        </label>
+        <label>
+            Message
+            <textarea id="message">
+                    Hello this is fundraiser for the children's home visit scheduled to occur on the 7th of October.
+            </textarea>
+        </label>
+
+        <label>
+            Start date :
+            <input type="date" id="start_date" value="2022-09-01">
+        </label>
+
+        <label>
+            End date :
+            <input type="date" id="end_date" value="2022-10-08">
+        </label>
+
+        <label>
+            Frequency
+            <textarea id="frequency">
+                {"repetitive":"yes","start_date":"2022-06-16","frequency":{"minute":"00","hour":"17","day_of_month":"*","month":"6","day_of_week":"5"}}
+            </textarea>
+        </label>
+    </fieldset>
+    <button id="go">Ok</button>
+    <button id="cancel">Cancel</button>
+</body>
+
+</html>
