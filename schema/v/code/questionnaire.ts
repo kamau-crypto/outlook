@@ -1,16 +1,16 @@
 //Define the structure of a questionnaire, Iquestionnaire
 //
 //A questionnaire is either:-
-export type Iquestionnaire = 
+export type Iquestionnaire =
     //
     // ...an array of layouts....
     Array<layout>
     //
     //...or a (Mutall) commented Microsoft Excel file name
-    |string;
+    | string;
 //
 //A layout is either labeled or tabular
-export type layout = label|table;
+export type layout = label | table;
 //
 //A labeled layout is a tuple of 5 elements
 //
@@ -39,7 +39,7 @@ type alias = Array<basic_value>;
 type Args = any[];
 //
 //The data to be stored in the database, specified as an expression. An expression may be:-
-type expression = 
+type expression =
     //
     //...a basic Typescript value...
     basic_value
@@ -47,16 +47,16 @@ type expression =
     //...or a tuple that has a function name and its arguments. The name is a 
     //reference to a PHP class and the arguments should match those of the 
     //(class) constructor
-    |[string, ...any]
-    
+    | [string, ...any]
+
 //
 //The basic data types in Typescript
-type basic_value = number|string|boolean|null;
+type basic_value = number | string | boolean | null;
 //-------------------------------------------------------------------
 //    
 //
 //The description of input data laid out in a tabular format
-type table = {
+export type table = {
     //
     //The class name of the table. The following are inbuilt -- all in the
     //capture namespace
@@ -66,45 +66,45 @@ type table = {
     //Users may add their own class names, as long as they define a matching 
     //php Class. For instance, the whatsapp class was added to support processng
     //of whatsup messages
-    class_name:string,
+    class_name: string,
     //
     //The arguments of the class constructor. For the inbuilt classes
     //check file questionnaire.php to get the correct order and type of 
     //constructor arguents
     //For user-defined classes, ensure that the arguments match those of 
     //the PHP class constructor 
-    args:Array<any>
+    args: Array<any>
 }
 
 //
 
 //The output from loading a questionnaire is the Imala data structure.
 //The structure is either...
-export type Imala = 
+export type Imala =
 
-  //...a list of syntax errors...
-  {class_name:'syntax', errors:Array<string>}
-  //
-  //..or runtime result from loading artefacts that are ....
-  |{  
-        class_name:'runtime', 
+    //...a list of syntax errors...
+    { class_name: 'syntax', errors: Array<string> }
+    //
+    //..or runtime result from loading artefacts that are ....
+    | {
+        class_name: 'runtime',
         //
         //...independent of data tables in the questionnaire
-        labels:Array<label>,
+        labels: Array<label>,
         //
         //...dependent of the tables 
-        tables:Array<{
+        tables: Array<{
             //
             //Name of the table
-            name:string,
+            name: string,
             //
             //Total number of logged errors
-            errors:number
+            errors: number
             //
             //A sample of the top 3 rows to reveal row based reaults 
-            rows:Array<label> 
+            rows: Array<label>
         }>
-   }
+    }
 //
 //The errors retuned in the label_errors part of teh Imala structure
 //is designed to be rich enough for reporting. For now,i its a simple string      
