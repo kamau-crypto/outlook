@@ -45,7 +45,7 @@ class database {
     export_structure(): schema.Idatabase;
     //
     //The query command is used for executing the insert,
-    //upadet and delete statements. The return value is the number of affected rows.
+    //update and delete statements. The return value is the number of affected rows.
     query(sql: string): number;
     //
     //Use the given credentials to authenticate the matching user.
@@ -399,6 +399,16 @@ export class merger {
     redirect_pointer(pointer: pointer): Array<index> | 'ok'
 }
 //
+//A recipient is either an individual or a group.
+export type recipient =
+    //
+    //A group has a business id used to get all members associated with that group
+    { type: 'group', business: outlook.business }
+    //
+    //The individual has a name which is used to retrieve his/her email address or
+    // the mobile number
+    | { type: 'individual', user: Array<string> };
+//
 //The messenger class that supports sending of sms's and emails to all users of 
 //the currently logged in user's business
 export class messenger {
@@ -409,34 +419,43 @@ export class messenger {
     send(
         //
         //The primary key of the business the user is currently logged in as
-        business:number,
+        recipient: recipient,
         //
         //The subject of the communication
-        subject:string,
+        subject: string,
         //
         //The body of the communicated message
-        body:string
-    ):boolean
+        body: string
+    ): Array<string>
 }
 //
-//The emailer class that supports sending of emails from one user to another or
-//to a group of users.
-export class mailer{
+//The at command is either for:-
+export type at =
+    //
+    //- sending a message indirectly using a job number(from which the message
+    //can be extracted from the database)
+    { type: "message", datetime: string, message: number, recipient: recipient }
+    //
+    //- or for initiating a fresh cronjob on the specified date
+    | { type: "refresh", datetime: string };
+//
+//The scheduler class that supports scheduling of automated tasks on the server
+export class scheduler {
     constructor();
     //
+    //Executing a scheduler requires that we get the array of at jobs
+    execute(
+        //
+        //The event's repetitive type
+        repetitive: boolean,
+        //
+        //The array of at commands which consists of the date and the message of
+        //the event
+        at: Array<at>
+    ): Array<string>;
     //
-    send_message(
-        //
-        //The sender's email
-        sender:string,
-        //
-        //Get the subject of the message
-        subject:string,
-        //
-        //The body of the message
-        body:string
-        ):string
-    
+    //Update the crontab file
+    update_cronfile():void;
 }
 //
 //This class implements the selector sql which is useful for populating selectors
@@ -453,18 +472,18 @@ export class selector {
     //
     //The execute method runs the query that returns the output of the data
     execute(): Ifuel;
-} 
+}
 //
 //This class supports the collection of untranslated words from the database and
 //using them in the database
-export class untranslated{
+export class untranslated {
     //
     constructor(
-    //
-    //The constructor requires the database 
-    dbase:string
+        //
+        //The constructor requires the database 
+        dbase: string
     );
     //
     //This method runs the query to fetch the untranslated KIKUYU words.
-    get_query():string;
+    get_query(): string;
 }
