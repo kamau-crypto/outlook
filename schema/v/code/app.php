@@ -80,7 +80,7 @@ class app extends database{
     // 
     //Returns all the products that are available to the given user for this
     //application.
-    function available_products(string $email){
+    function available_products(string $name){
         //
         //Get products that are sssets for the user. These are products that 
         //have a cost but the user has subscribed to them explicitly
@@ -93,7 +93,7 @@ class app extends database{
                 inner join  `user` on subscription.user = `user`.`user`
                 inner join `application` on player.application = `application`.`application`
             WHERE
-                `user`.`email`='$email' "
+                `user`.`name`='$name' "
                 ."and `application`.`id`='$this->id' "
                 ."and not(`product`.`cost`=0 or `product`.`cost` is null)";
         //
@@ -108,7 +108,7 @@ class app extends database{
                 inner join  `user` on subscription.user = `user`.`user`
                 inner join `application` on player.application = `application`.`application`
             WHERE
-                `user`.`email`='$email' "
+                `user`.`name`='$name' "
                 ."and `application`.`id`='$this->id' "
                 ."and (`product`.`cost`=0 or `product`.`cost` is null)";
         
