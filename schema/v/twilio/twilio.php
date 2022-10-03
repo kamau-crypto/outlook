@@ -1,73 +1,104 @@
-
 <?php
 //
 //Start a session
-session_start();
 //
-//Resp;ve the refence to the Twilio php autoloader
-require_once './vendor/autoload.php';
+//Resolve the reference to the Twilio php autoloader
+//include_once './vendor/autoload.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/schema/v/twilio/vendor/autoload.php';
 //
-//Instantiate the Alias to the app, the Namespace Rest, and the Class Client
-
-use Twilio\Rest\Api\V2010\Account\MessageInstance;
-use Twilio\Rest\Client;
+//Resolve ther reference to the dotenv loader
+include_once $_SERVER['DOCUMENT_ROOT'] . '/dotenv/vendor/autoload.php';
 //
-class twilio
+//The twilio class that supports sending of messages and emails to the clients.
+//This class works with the dotenv to control access to the environment variables
+//designed for usage within the application but have restricted access due
+//Auth privacy. The environment variables are:- the account sid, the authtoken,
+//and the twilio phone number. Using the above variables, a twilio client is created
+//using the account sid and auth token which is used to send short mobile messages.
+//The client provides the recipient's phone number, the subject of the message,
+//and the body of the message itself.
+//
+class twilio extends Twilio\Rest\Client
 {
     //
     // Obtain the account ssid, the account token, and the account phone number 
-    // from the twilio console. You must have logged in to twilio to obtain these
-    //Get the twilio ACCOUNT_SID
-    const sid = "";
+    // from the twilio console. You must have a twilio account to have access to these
+    // The twilio ACCOUNT_SID
+    public $sid;
     //
-    //Get the account AUTH_TOKEN
-    const token = "";
+    // The twilio account AUTH_TOKEN
+    public $token;
     //
-    //Get the account PHONE_NUMBER
-    const phone = "+18593764537";
-
+    //The twilio account PHONE_NUMBER
+    public $acc_phone;
     //
+    //The function's constructor that permits usage of methods
     function __construct()
     {
+        //
+        //Load the environment variables
+        $this->load_variables();
+        //
+        //Call the twilio client with the account credentials
+        parent::__construct($this->sid, $this->token);
     }
     //
-    public function send_message(string $to, string $subject, string $body):string /*'ok'|error*/
+    //This is a private function that permists loading of environment variables
+    //such as the twilio :- account_sid, auth_token, and the twilio_phone_number
+    private function load_variables(): void
+    {
+        //
+        //The variables should not chage once they are set
+        $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+        //
+        //Load the environment variables
+        $dotenv->load();
+        //
+        //Explicit validation of environment variables
+        $dotenv->required('TWILIO_ACCOUNT_SID', 'TWILIO_AUTH_TOKEN', '');
+        //
+        //Twilio account_SID
+        $this->sid = $_ENV['TWILIO_ACCOUNT_SID'];
+        //
+        //The twilio account AUTH TOKEN
+        $this->token = $_ENV['TWILIO_AUTH_TOKEN'];
+        //
+        //The twilio PHONE NUMBER
+        $this->acc_phone = $_ENV['TWILIO_PHONE_NUMBER'];
+    }
+    //
+    //This function is used to send phone messages to a specific user where the user provides the
+    //phone number, the subject of the message, and the body of the message.
+    public function send_message(string $to, string $subject, string $body): string /*'ok'|error*/
     {
         //
         //Combine the body and the subject of the message
-        $text = "\n" . $subject . "\n" . $body;
+        $text = "$subject::\n $body\n";
         //
-        //Instantiate a new instance of the Client class to enable senfing the messaged
-        $twilio = new Client(self::sid, self::token);
-        //
-        //Create twilio messagess and send them using the parameters obtained from the fule
-        /* From the $TWILIO->messages->create indicates that there wihin the clas client, accessible
-        usiing two parameters, namely the client and the token, there is a method messaeges with the
-        create closure that takes two arguements, the reciever, and an array of the message and the 
-        receoients phone number,i.e., <string, Array<key:value>> */
-        //
-        try{
-        //
-        //Ignore the return value if successful
-            /*$message =*/ $twilio->messages->create(
+        //Prepare to trap exceptions for cases when the phone number is incorrect
+        try {
+            //
+            //Send the message
+            $this->messages->create(
                 //
                 //The phone address to send the message to
                 $to,
-                [   //
+                //
+                //The structure of the message
+                [
+                    //
                     //The body of the message
                     "body" => $text,
                     //
-                    //The phone where the message is coming from
-                    "from" => self::phone
+                    //The twilio phone number sending the message
+                    "from" => $this->acc_phone
                 ]
             );
             return 'ok';
-        }
-        catch(Exception $ex ){
+        } catch (Exception $ex) {
+            //
+            //Return the error message generated
             return $ex->getMessage();
         }
-        
     }
 }
-
-?>
