@@ -309,7 +309,7 @@ class questionnaire extends schema {
             $msg = "Syntax errors<br/>"
                .implode("<br/>",
                     array_map(
-                        fn($error)=>$error->to_str(), 
+                        fn($error)=>"$error", 
                         $result['errors']
                     )     
                 );
@@ -1259,8 +1259,13 @@ namespace capture {
                 }
                 //
                 //If the nearest artefact is an error, then let the save result
-                //be the error
-                elseif ($this->nearest instanceof \myerror) {
+                //be the error.NB: There is a disconnection between /myerror and
+                // /capture/myerror classes. The former should be an extension 
+                //of the latter but it is not.We shall solve this issue in a 
+                //later version. For now,do the following orring operation
+                elseif ($this->nearest instanceof \myerror
+                        || $this->nearest instanceof myerror
+                ) {
                     //
                     $exp = $this->nearest;
                 }
