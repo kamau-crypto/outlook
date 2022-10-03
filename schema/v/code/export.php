@@ -7,12 +7,12 @@
 ob_start();
 //
 //Catch all errors, including warnings.
-set_error_handler(function(
-    $errno, 
-    $errstr, 
-    $errfile, 
+set_error_handler(function (
+    $errno,
+    $errstr,
+    $errfile,
     $errline /*, $errcontext*/
-){
+) {
     throw new ErrorException($errstr, $errno, E_ALL, $errfile, $errline);
 });
 //The output structure has the format: {ok, result, html} where:-
@@ -23,32 +23,38 @@ set_error_handler(function(
 $output = new stdClass();
 //
 //Catch any error that may arise.
-try{
+try {
     //Define the root path of the code
-    $path=$_SERVER['DOCUMENT_ROOT'].'/schema/v/code/';
+    $path = $_SERVER['DOCUMENT_ROOT'] . '/schema/v/code/';
     //
     //Include the library where the mutall class is defined. (This will
     //throw a warning only which is not trapped. Avoid require. Its fatal!
-    include_once  $path.'schema.php';
+    include_once  $path . 'schema.php';
     //
     //Save the server postings to post.json for debugging 
     //purposes. Do this as ear;y as we can, so that, at least we have a json for
     //debugging.
     mutall::save_requests('post.json');
     //
-    include_once  $path.'sql.php';
+    include_once  $path . 'sql.php';
     //
     //This is the large tableload replacement for record (small table loads)
-    include_once  $path.'questionnaire.php';
+    include_once  $path . 'questionnaire.php';
     //
     //The browser class used for exploring server files is found here
-    include_once  $path.'tree.php';
+    //    include_once  $path . 'tree.php';
     //
     //Methods for activating products are found in the app class
-    include_once  $path.'app.php';
+    include_once  $path . 'app.php';
     //
     //To support the merging operation
-    include_once  $path.'merger.php';
+    include_once  $path . 'merger.php';
+    //
+    //To support the sending messages
+    include_once $path . 'messenger.php';
+    //
+    //To support scheduling of tasks
+    include_once $path . 'scheduler.php';
     //
     //Register the class autoloader 
     //Why is the callback written as a string when the data type clearly 
@@ -56,35 +62,33 @@ try{
     spl_autoload_register('mutall::search_class');
     //
     //Run the requested method an a requested class
-    if(isset($_GET["post_file"])){
+    if (isset($_GET["post_file"])) {
         //
         //Post a file
-        $output->result= mutall::post_file();        
-    }
-    else {
+        $output->result = mutall::post_file();
+    } else {
         //Execute a named method on a class
         $output->result = mutall::fetch();
     }
     //
     //The process is successful; register that fact
-    $output->ok=true;
+    $output->ok = true;
 }
 //
 //The user request failed
-catch(Exception $ex){
+catch (Exception $ex) {
     //
     //Register the failure fact.
-    $output->ok=false;
+    $output->ok = false;
     //
     //Compile the full message, including the trace
-     //
+    //
     //Replace the hash with a line break in teh terace message
     $trace = str_replace("#", "<br/>", $ex->getTraceAsString());
     //
     //Record the error message in a friendly way
     $output->result = $ex->getMessage() . "<br/>$trace";
-}
-finally{
+} finally {
     //
     //Empty the output buffer to the output html property
     $output->html = ob_end_clean();
