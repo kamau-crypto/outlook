@@ -28,6 +28,9 @@ class config{
     // 
     //This is the general template for collecting simple user data.
     public string $general = "/outlook/v/code/general.html";
+    //
+    //This is the business creation template
+    public string $business="outlook/v/code/new_business.html";
     // 
     //The maximum number of records that can be retrieved from 
     //the server using one single fetch. Its value is used to modify 
