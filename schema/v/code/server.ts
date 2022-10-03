@@ -58,10 +58,13 @@ export async function exec<
         //The class of the php class to execute.
         class_name: class_name,
         //
+        //The constructor arguements
         cargs: cargs,
         //
+        //The method to call on the constructor object
         method_name: method_name,
         //
+        //These are the arguements passed to the methods.
         margs: margs
     ): Promise<$return> {
     //
