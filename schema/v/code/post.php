@@ -8,9 +8,8 @@
 //The schema is the base of all our applications; it is primarily used for
 //supporting the database class. 
 include_once $_SERVER['DOCUMENT_ROOT'].'/schema/v/code/schema.php';
-//
-//Include other files, as required by the mthod being tested
-include_once $_SERVER['DOCUMENT_ROOT'].'/schema/v/code/questionnaire.php';
+//include_once $_SERVER['DOCUMENT_ROOT'].'/schema/v/code/app.php';
+include_once $_SERVER['DOCUMENT_ROOT'].'/schema/v/code/scheduler.php';
 //
 //Get the last posted data
 $contents = file_get_contents('post.json');
@@ -22,4 +21,4 @@ $_REQUEST = json_decode($contents, true);
 $result = mutall::fetch();
 //
 //Show the results
-echo "<pre>".json_encode($result)."/pre>";
+echo "<pre>".json_encode($result)."</pre>";
