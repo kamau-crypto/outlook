@@ -220,14 +220,14 @@ class database extends schema{
         const list = Object.values(this.entities);
         //
         //Select from the list only those entities that have a column called
-        // email.
+        //user.
         const interest= list.filter(entity=>{
             //
             //Get the column names of this entity
             const names = Object.keys(entity.columns);
             //
-            //Check whether email is one of this names
-            const exist = names.includes("email");
+            //Check whether user.name is one of this names
+            const exist = names.includes("user");
             return exist;
         });
         //
